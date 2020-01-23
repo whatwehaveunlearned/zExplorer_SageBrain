@@ -2,6 +2,7 @@ Zexplorer SAGEBRAIN
 ==========================
 
 This is the zEplorer Module for SAGEBRAIN.
+------------
 
 -classes 
   |-author_class.py
@@ -18,3 +19,5 @@ This is the zEplorer Module for SAGEBRAIN.
   |-session_class.py
   |topic_class.py
   |zotero_class.py
+
+------------
