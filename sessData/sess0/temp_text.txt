@@ -1,0 +1,1289 @@
+Semantic Interaction for Visual Text Analytics 
+Chris North 
+Alex Endert 
+Virginia Tech 
+Virginia Tech 
+
+Patrick Fiaux 
+Virginia Tech 
+
+Blacksburg, VA USA 
+
+aendert@vt.edu 
+
+Blacksburg, VA USA 
+
+pfiaux@vt.edu 
+
+ 
+
+Blacksburg, VA USA 
+
+north@vt.edu 
+
+by 
+
+For 
+
+through 
+
+ABSTRACT 
+Visual analytics emphasizes sensemaking of large, complex 
+datasets 
+interactively  exploring  visualizations 
+generated 
+example, 
+statistical  models. 
+dimensionality  reduction  methods  use  various  similarity 
+metrics to visualize textual document collections in a spatial 
+metaphor,  where  similarities  between  documents  are 
+approximately  represented  through  their  relative  spatial 
+distances  to  each  other  in  a  2D  layout.  This  metaphor  is 
+designed to mimic analysts’ mental models of the document 
+collection  and  support  their  analytic  processes,  such  as 
+clustering similar documents together. However, in current 
+methods, users must interact with such visualizations using 
+controls  external  to  the  visual  metaphor,  such  as  sliders, 
+menus, or text fields, to directly control underlying model 
+parameters  that  they  do  not  understand  and  that  do  not 
+relate  to  their  analytic  process  occurring  within  the  visual 
+metaphor.  In  this  paper,  we  present  the  opportunity  for  a 
+new  design  space  for  visual  analytic  interaction,  called 
+semantic  interaction,  which  seeks  to  enable  analysts  to 
+spatially interact with such models directly within the visual 
+metaphor using interactions that derive from their analytic 
+process,  such  as  searching,  highlighting,  annotating,  and 
+repositioning  documents.  Further,  we  demonstrate  how 
+semantic  interactions  can  be  implemented  using  machine 
+learning 
+tool,  called 
+ForceSPIRE, for interactive analysis of textual data within 
+a  spatial  visualization.    Analysts  can  express  their  expert 
+domain knowledge about the documents by simply moving 
+them,  which  guides  the  underlying  model  to  improve  the 
+overall layout, taking the user’s feedback into account. 
+Author Keywords 
+Visualization; visual analytics; interaction 
+ACM Classification Keywords 
+H5.m.  Information  interfaces  and  presentation  (e.g.,  HCI): 
+Miscellaneous.  
+General Terms 
+Design; Human Factors; Theory 
+
+in  a  visual  analytic 
+
+techniques 
+
+ 
+Permission to  make digital or hard copies of all or part of this work for 
+personal or classroom use is granted without fee provided that copies are 
+not made or distributed for profit or commercial advantage and that copies 
+bear this notice and the full citation on the first page. To copy otherwise, 
+or  republish,  to  post  on  servers  or  to  redistribute  to  lists,  requires  prior 
+specific permission and/or a fee. 
+CHI’12, May 5–10, 2012, Austin, Texas, USA. 
+Copyright 2012 ACM 978-1-4503-1015-4/12/05...$10.00. 
+ 
+
+ 
+
+INTRODUCTION 
+Visual analytics bases its success on combining the abilities 
+of statistical models, visualization, and human intuition for 
+users to gain insight into large, complex datasets [23]. This 
+success often hinges on the ability for users to interact with 
+the  information,  manipulating  the  visualization  based  on 
+their  domain  expertise,  interactively  exploring  possible 
+connections, and investigating hypotheses. It is through this 
+interactive exploration that users are able to make sense of 
+complex  datasets,  a  process  referred  to  as  sensemaking 
+[19].  
+The  two  primary  parts  of  sensemaking  are  foraging  and 
+synthesis. Foraging refers to the stages of the process where 
+users filter and gather collections of interesting or relevant 
+information.  Then,  using  that  information,  users  advance 
+through  the  synthesis  stages  of  the  process,  where  they 
+construct  and  test  hypotheses  about  how  the  foraged 
+information  may  relate  to  the  larger  plot.  Tools  exist  that 
+support users for either foraging or synthesis – but not both. 
+In  this  paper  we  present  semantic  interaction,  combining 
+the  foraging  abilities  of  statistical  models  with  the  spatial 
+synthesis abilities of analysts. Semantic interaction is based 
+on the following principles: 
+1. Visual  “near=similar”  metaphor  supports  analysts’ 
+spatial  cognition,  and  is  generated  by  statistical  models 
+and similarity metrics. [22] 
+
+2. Use  semantic  interactions  within  the  visual  metaphor, 
+based  on  common  interactions  occurring  in  spatial 
+analytic  processes  [4]  such  as  searching,  highlighting, 
+annotating, and repositioning documents.  
+
+3. Interpret  and  map  the  semantic  interactions  to  the 
+underlying parameters of the model, by updating weights 
+and adding information. 
+
+4. Shield  the  users  from  the  complexity  of  the  underlying 
+
+mathematical models and parameters. 
+
+5. Models  learn  incrementally  by  taking  into  account 
+interaction during the entire analytic process, supporting 
+analysts’ process of incremental formalism [10]. 
+
+6. Provide  visual  feedback  of  the  updated  model  and 
+
+learned parameters within the visual metaphor. 
+
+7. Reuse  learned  model  parameters  in  future  or  streaming 
+
+data within the visual metaphor. 
+
+To  demonstrate  the  concept  of  semantic  interaction,  we 
+present  a  prototype  visual  analytics  tool,  ForceSPIRE,  for 
+spatial analysis of textual information. In ForceSPIRE, the 
+user  interaction  takes on  a deeper,  more  integrated role in 
+
+the  exploratory  spatial  analytic  process.  This  is  done 
+through capturing the semantic interaction, interpreting the 
+analytical  reasoning  associated  with  the  interaction,  and 
+updating the statistical model, and ultimately updating the 
+spatialization.  Hence,  users  are  able  to  leverage  semantic 
+interaction  to  explore  and  analyze  the  data  interactively, 
+while  the  system  is  responsible  for  properly  updating  the 
+underlying statistical model.  
+RELATED WORK 
+Foraging Tools 
+
+ 
+
+Figure  1.  A  model  of  interaction  with  foraging  tools.  Users 
+interact  directly  with  the  statistical  model  (red),  then  gain 
+insight  through  observing  the  change  in  the  visualization 
+(blue). 
+We  categorize  foraging  tools  by  their  ability  to  pass  data 
+through  complex  statistical  models  and  visualize  the 
+computed structure of the dataset for the user to gain insight 
+(Figure  1).  Thus,  users  interact  with  these  tools  primarily 
+through directly manipulating the parameters of the model 
+used  for  computing  the  structure.  As  such,  users  are 
+required  to  translate  their  domain  expertise  and  semantics 
+about  the  information  to  determine  which  (and  by  how 
+much) to adjust these parameters. The following examples 
+further describe this category of tools. 
+Visualizations such as IN-SPIRE’s “Galaxy View” (shown 
+in  Figure  3)  present  users  with  a  spatial  layout  of  textual 
+information where similar documents are proximally close 
+to  one  another  [25].  An  algorithm  creates  the  layout  by 
+mapping the high-dimensional collection of text documents 
+down  to  a  two-dimensional  view.  In  these  spatializations, 
+the  spatial  metaphor  is  one  from  which  users  can  infer 
+meaning  of  the  documents  based  on  their  location.  The 
+notion  of  distance  between  documents  represents  how 
+similar the two documents are (i.e., more similar documents 
+are  placed  closer  together).  For  instance,  a  cluster  of 
+documents  represents  a  group  of  similar  documents,  and 
+documents  placed  between  two  clusters  implies  those 
+documents are connected to both clusters. These views are 
+beneficial  as  they  allow  users  to  visually  gain  a  quick 
+overview  of  the  information,  such  as  what  key  themes  or 
+groups  exist  within  the  dataset.  The  complex  statistical 
+models  that  compute  similarity  between  documents  are 
+based on the structure within the data, such as term or entity 
+frequency. In order to interactively change the view, users 
+are  required  to  directly  adjust  keyword  weights,  add  or 
+remove documents/keywords, or provide more information 
+on how to parse the documents for keywords/entities upon 
+import. 
+
+ 
+
+to  a 
+
+to  understand 
+
+the 
+
+[15].  Through  adjusting 
+
+Similarly, an interactive visualization tool called iPCA uses 
+Principal  Component  Analysis  (PCA)  to  reduce  high-
+dimensional  data  down 
+two-dimensional  plot, 
+providing  users  with  sliders  and  other  visual  controls  for 
+directly  adjusting  numerous  parameters  of  the  algorithm, 
+such  as  individual  eigenvalues,  eigenvectors,  and  other 
+components  of  PCA 
+the 
+parameters,  the  user  can  observe  how  the  visualization 
+changes.  This  allows  users  to  gain  insight  into  a  dataset, 
+given  they  have  a  thorough  understanding  of  PCA, 
+necessary 
+the 
+changes they are making to the model parameters. 
+Alsakran  et  al.  presented  a  visualization 
+system, 
+STREAMIT,  capable  of  spatially  arranging  text  streams 
+based  on  keyword  similarity  [3].  Again,  users  can 
+interactively  explore  and  adjust  the  spatial  layout  through 
+directly  changing  the  weight  of  keywords  that  they  find 
+important.  In  addition,  STREAMIT  allows  for  users  to 
+conduct  a  temporal  investigation  of  how  clusters  change 
+over time. 
+Synthesis Tools 
+
+implications  behind 
+
+ 
+
+Figure  2.  A  model  of  interaction  with  synthesis  tools.  Users 
+manually  create  a  spatial  layout  of  the  information  to 
+maintain and organize their insights about the data. 
+Synthesis  tools  focus  on  allowing  users  to  organize  and 
+maintain their hypotheses and insight regarding the data in 
+a  spatial  medium.  In  large  part,  this  is  done  through 
+presenting users with a flexible spatial workspace in which 
+they  can  organize  information  through  creating  spatial 
+structures,  such  as  clusters,  timelines,  stories,  etc.  (Figure 
+2). In doing so, users externalize their thought processes (as 
+well  as  their  insights)  into  a  spatial  layout  of  the 
+information. 
+For example, Analyst’s Notebook [2] provides users with a 
+spatial workspace where information can be organized, and 
+connections  between  specific  pieces  of  information  (e.g., 
+entities, documents, events, etc.) can be created. Similarly, 
+The Sandbox [26] enables users to create a series of cases 
+(collections  of 
+information)  which  can  be  organized 
+spatially within the workspace.  
+From  previous  studies,  we  found  cognitive  advantages 
+associated  with  the  manual  creation  of  a  spatial  layout  of 
+the  information  [4].  By  providing  users  a  workspace  in 
+which  to  manually  create  spatial  representations  of  the 
+information, users were able to externalize their semantics 
+of the information into the workspace. That is, they created 
+spatial  structures  (e.g.,  clusters,  timelines,  etc.),  and  both 
+the structures as well as the locations relative to remaining 
+layout  carried  meaning  to  the  users  with  regards  to  their 
+sensemaking process. Marshall et al. have pointed out that 
+
+this 
+
+interaction  (and 
+
+From  the  sensemaking  loop  presented  by  Pirolli  and  Card 
+[19],  we  learn  that  in  intelligence  analysis,  that  analytic 
+process  consists  not  only  of  the  information  that  is 
+explicitly  within  the  dataset  being  analyzed,  but  also  the 
+domain knowledge of the analyst performing the analysis. It 
+is through this domain knowledge that analysts interact and 
+explore  the  dataset  to  “make  sense”  of  the  information. 
+Thus,  we  believe 
+the  domain 
+knowledge  associated  with  it)  is  equally  important  as  the 
+raw data, and must be incorporated into the visualization by 
+tightly coupling the model with the interaction. 
+From this body of work, we most notably come away with 
+an understanding that 1) analysts fundamentally understand 
+the spatial metaphor used in many spatial visualizations, 2) 
+many  of  these  systems  are  constructed  using  complex 
+mathematical  algorithms  to  transform  high-dimensional 
+data  to  two  dimensions,  and  3)  in  most  cases  these 
+algorithms  can  be  controlled  by  analysts  largely  through 
+visual  controls  (e.g.,  sliders,  knobs,  etc.)  to  directly  adjust 
+parameters of the algorithms, updating the spatial layout. 
+SEMANTIC INTERACTION 
+
+ 
+
+Figure 4. A model of semantic interaction. Users are able to 
+interact directly in the spatial metaphor. The system updates 
+the corresponding parameters of the statistical model based on 
+the analytic reasoning of the users. Finally, the model updates 
+
+the visualization based on the changes, thus unifying the 
+synthesis and foraging stages of the sensemaking loop. 
+
+In the purest sense, semantic interaction refers to interaction 
+occurring  within  a  spatial  visualization,  with  the  added 
+benefit that it is tightly coupled to the model calculating the 
+spatial layout (Figure 4). Given the previous work of what 
+interaction  in  visual  analytic  tools  is,  semantic  interaction 
+occupies a new design space for interaction. It merges the 
+ability to change the statistical model while maintaining the 
+flexibility  and  familiar  methods  for  interacting  within  the 
+metaphor  of  spatial  visualizations.  Users  can  benefit  from 
+semantic  interactions  in  that  they  can  interact  within  a 
+metaphor  which 
+they  are  familiar  with,  performing 
+interactions  which  are  part  of  the  spatial  analytic  process 
+[4], without having to focus on formal updates to the model.  
+Semantic  interaction  leverages  the  cognitive  connection 
+formed  between  the  user  and  the  spatial  layout.  The 
+following intelligence analysis scenario is representative of 
+the strategies and interactions of analysts when performing 
+an  intelligence  analysis  task  of  textual  documents  in  a 
+spatial visualization, as previously found by Andrews et al. 
+[4],  and  further  motivates  and  explains  the  concept  of 
+semantic interaction: 
+
+ 
+Figure  3.  The  IN-SPIRE  Galaxy  View  showing  a 
+spatializtiation  of  documents  represented  as  dots.  Each 
+cluster of dots represents a group of similar documents.  
+ 
+allowing users to create such informal relationships within 
+information  is  beneficial,  as  it  does  not  require  users  to 
+formalize these relationships [17].  
+From this related work, we believe a trend is emerging in 
+how interaction is currently handled in many visual analytic 
+systems where complex statistical models are used – users 
+are  required  to  go  outside  of  the  metaphor.  That  is,  while 
+the  visual  representation  given  to  users  is  spatial,  the 
+methods of interaction require users to step outside of that 
+metaphor  and  interact  directly  with  the  parameters  of  the 
+statistical model using visual controls, toolbars, etc.  
+There  has  been  some  work  in  providing  more  easy  to  use 
+interactions  for  updating  statistical  models.  For  example, 
+relevance feedback has been used for content-based image 
+retrieval, where users are able to move images towards or 
+away  from  a  single  image  in  order  to  portray  pair-wise 
+similarity  or  dissimilarity  [24].  From  there,  an  image 
+retrieval algorithm determines the features and dimensions 
+shared between the images that the user has determined as 
+being  similar.  We  view  this  as  one  example  where  the 
+interaction stays in the spatial metaphor of the visualization.  
+Also, spatializations of document sets exist that allow users 
+to place “points of interest” into the spatial layout. In VIBE, 
+users are allowed to define multiple points of interest in the 
+spatial  layout  that  correspond  to  a  series  of  keywords 
+describing  a  subject  matter  of  interest  to  the  user  [18]. 
+Similarly,  Dust  &  Magnet  [27]  allows  users  to  place  a 
+series  of  “magnets”  representing  keywords  into  the  space 
+and observe how documents are attracted or repelled from 
+the  locations  of  these  magnets.  Through  both  of  these 
+systems, users can interact in the spatial metaphor through 
+these  placements  of  “nodes”  representing  keywords. 
+However, the focus of semantic interaction is on interacting 
+with  data  (i.e.,  documents),  an 
+important  distinction 
+discussed in the following section. 
+
+ 
+
+ 
+
+ 
+Figure  5.  (top)  The  basic  version  of  the  “visualization 
+pipeline”.  Interaction  can  be  performed  on  directly  the 
+Algorithm  (blue  arrow)  or  the  data  (red  arrow).  (bottom) 
+Our  modified  version  of 
+for  semantic 
+interaction,  where  the  user  interacts  within  the  spatial 
+metaphor (purple arrow). 
+
+the  pipeline 
+
+During her analysis, an intelligence analyst finds a 
+suspicious  and 
+interesting  phrase  within  a 
+document. While reading through the document, she 
+highlights  the  phrase  “suspicious  individuals  were 
+spotted  at  the  airport”,  in  order  to  more  easily 
+recall  this  information  later.  After  she  finishes 
+reading the document, she moves the document into 
+the  bottom  right  corner  of  her  workspace,  in  the 
+proximity of other documents related to an event at 
+an airport. To remind herself of her hypothesis, she 
+annotates  the  document  with  “might  be  related  to 
+Revolution  Now  terrorist  group”.  Now,  with  the 
+goal  of 
+the 
+“airport”, she searches for the term, continuing her 
+investigation. 
+
+further  examining 
+
+the  events  at 
+
+investigating 
+
+that  each  of 
+
+instead  point  out 
+
+the  analytic  process  of 
+
+In addition to the three forms of semantic interaction in the 
+scenario,  Table  1  provides  a  list  of  various  forms  of 
+semantic  interaction,  including  how  each  can  be  used 
+within 
+textual 
+information  spatially.  We  do  not  claim  that  this  list  is 
+complete,  but 
+these 
+interactions  can  relate  to  a  user’s  reasoning  within  the 
+analytic process.  
+Designing for Semantic Interaction 
+In order for analysts to interact with information in a spatial 
+metaphor, it must first be created. Following the model of 
+the visualization pipeline [13], this creation calls for a series 
+of  mathematical  transformations,  turning  raw  data  into  a 
+spatial  layout  –  much  the  way  many  of  the  visualizations 
+mentioned  previously  are  constructed.  However,  these 
+visualizations  fit  this  model,  as  their  user  interactions  are 
+primarily  focused  on  directly  modifying  the  statistical 
+model  (as  well  as  other  attributes  of  the  visualization  or 
+data  transformation).  Designing  for  semantic  interaction 
+requires  a  fundamentally  different  model  for  how  tools 
+integrate  user  interaction  –  one  that  can  capture  the 
+interaction,  interpret  the  associated  analytical  reasoning, 
+and update the appropriate mathematical parameters.  
+Figure  5  illustrates  this  model,  where  the  spatialization  is 
+treated  a  medium  through  which  the  user  can  perceive 
+
+ 
+
+Figure 6. Overview of how nodes and edges in ForceSPIRE’s 
+force-directed layout are created from documents (Doc) and 
+entities (Ent), respectively.  
+
+ 
+
+ 
+
+it 
+
+interaction, 
+
+information  and  gain  insight,  as  well  as  interact  and 
+perform  his  analysis.  Through  expanding  the  pipeline  to 
+accommodate  for  semantic 
+is  a  more 
+appropriate match to the user’s sensemaking process. 
+Capturing the Semantic Interaction 
+A  non-trivial  first  step  in  the  model  is  capturing  the  user 
+interaction.  Much  research  has  been  done  in  this  area, 
+primarily  for  the  purpose  of  maintaining  process  history 
+(e.g., [5], [21], [12], etc.). When considering how to capture 
+interaction,  one  decision  to  be  made  is  at  what  “level”  to 
+capture  it.  For  example,  GlassBox  [6]  captures  interaction 
+at a rudimentary level (i.e. mouse clicks and key strokes), 
+while  Graphical  History  [14]  keeps  track  of  a  series  of 
+previous  visualizations  as  a  user  changes  the  visualization 
+during the exploration of the data.  
+Semantic  interaction  is  captured  at  a  data  level,  as  the 
+interactions  occur  on  the  data,  and  within  the  spatial 
+metaphor.  Using 
+the 
+interaction being captured would be: 
+
+the  earlier  analytic  scenario, 
+
+•  The highlighted phrase 
+•  When the highlighting occurs (timestamp) 
+•  The color chosen for the highlight 
+•  The document in which the highlight occurs 
+•  The new document location 
+•  The text of the annotation 
+
+By  capturing  (and  storing)  the  interaction  history,  we  can 
+interpret the analytical reasoning of the user. Thus, we not 
+only capture the interaction, but also use it. 
+Interpreting the Associated Analytical Reasoning 
+In interpreting the interaction, the goal is for the system to 
+determine  the  analytical  reasoning  associated  with  the 
+interactions  and  update  the  model  accordingly.  From 
+previous findings [4], we can associate analytical reasoning 
+with  forms  of  semantic  interaction  (see  Table  1).  It  is 
+essentially the model’s task to determine  why, in terms of 
+the data, the interaction occurred. To answer this question, 
+we do not propose that this model can accurately gauge user 
+intent.  Instead,  the  goal  is  to  calculate,  based  on  the  data, 
+
+Figure 7. Using ForceSPIRE on a 32 megapixel large, 
+high-resolution display. 
+
+ 
+
+ 
+what information is consistent with the captured interaction. 
+For  instance,  we  associate  text  highlighting  with  adding 
+importance to the text being highlighted. We do not claim 
+that we can associate the interaction of highlighting to the 
+intuition that spurred the analyst to highlight the text, which 
+is far more challenging, and arguably impossible. 
+We refer to the captured and interpreted interactions as soft 
+data, in comparison to the hard data that is extracted from 
+the raw textual information (e.g., term or entity frequency, 
+titles,  document  length,  etc.).  We  define  soft  data  as  the 
+stored result of user interaction as interpreted by the system. 
+In  representing  interaction  as  soft  data,  the  algorithm  can 
+calculate  and  reconfigure  the  spatial  layout  accordingly. 
+Figure  5  illustrates  how  our  approach  differs  from  the 
+traditional visualization pipeline. 
+There has been previous work in capturing and interpreting 
+reasoning from user interaction. For instance, Dou et al. [7] 
+performed  a  study  where  financial  analysts  were  asked 
+analyze  a  dataset  using  WireVis,  an  interactive  financial 
+transaction visualization. The tool developers then analyzed 
+the captured interaction, and assumptions were made about 
+the  reasoning  of  the  analysts  at  specific  points  in  the 
+investigation. These results were compared to the analysts’ 
+self-recorded  reasoning,  and  found  to  be  accurate  up  to 
+82%. While our work has similar goals (i.e., interpreting the 
+analytical reasoning associated with the analysts through an 
+evaluation  of  the  interaction)  our  model  does  so  through 
+tightly  integrating  the  interaction  with  the  underlying 
+mathematical model. In doing so, the interpretation can be 
+done algorithmically. 
+Updating the Underlying Model 
+Through  metric  learning  of  distance  weights,  the  layout 
+uses  the  soft  data  to  update  the  underlying  model. 
+Depending  on  the  algorithm  used  to  compute  the  spatial 
+layout,  the  precise  parameters  being  updated  will  vary.  In 
+general,  this  will  refer  to  weighting  of  a  combination  of 
+dimensions  that  will  help  guide  the  model  as  to  which 
+dimensions the user finds important.  
+FORCESPIRE: SYSTEM OVERVIEW 
+ForceSPIRE  is  a  visual  analytics  prototype  designed  for 
+specific 
+(document 
+movement,  text  highlighting,  search,  and  annotation)  for 
+
+forms  of 
+
+interaction 
+
+semantic 
+
+ 
+
+Figure  8.  Moving  the  document  shown  by  the  arrow, 
+ForceSPIRE  adapts  the  layout  accordingly.  Documents 
+sharing entities with the document being moved follow. 
+
+ 
+
+interactively exploring textual data. The system has a single 
+spatial  view  (shown  in  Figure  12),  where  a  collection  of 
+documents is represented spatially based on similarity (i.e., 
+documents closer together are more similar).  
+ForceSPIRE is designed for large, high-resolution displays 
+(such  as  the  one  shown  in  Figure  7).  As  semantic 
+interaction emphasizes the importance of context in which 
+the  interaction  takes  place  (e.g.,  highlighting  text  in  the 
+context  of  the  document),  having  the  full  detail  text 
+available  in  the  context  of  the  spatial  layout  is  beneficial 
+over having a single document viewer. Further, the physical 
+
+Table  1.  Forms  of  semantic  interaction.  Each  interaction 
+corresponds  to  reasoning  of  users  within  the  analytic 
+process. 
+
+Form of Semantic 
+
+Interaction 
+
+Document Movement 
+
+Text Highlighting 
+
+Pinning  Document 
+Location 
+Annotation, “Sticky Note” 
+
+to 
+
+Document Coloring 
+
+Level of Visual Detail 
+
+Query Terms 
+ 
+
+Associated Analytic Reasoning 
+
+• Similarity/Dissimilarity 
+• Create 
+
+spatial  construct 
+
+timeline, list, story, etc) 
+
+• Test 
+
+hypothesis, 
+
+see 
+document “fits” in region 
+
+(.e.g 
+
+how 
+
+• Mark 
+
+importance  of  phrase 
+
+(collection of entities) 
+
+• Augment  visual  appearance  of 
+
+document for reference 
+
+to 
+
+in 
+
+• Give 
+
+semantic  meaning 
+
+space/layout 
+
+• Put 
+
+semantic 
+
+information 
+
+workspace, within context 
+• Create visual group/cluster 
+• Mark group membership 
+• Change 
+
+ease 
+
+of 
+
+visually 
+referencing  information  (e.g.  full 
+detail = more important = easy to 
+reference) 
+
+• Expressive search for entity 
+
+(and 
+
+to  match 
+
+is  positioning 
+
+Semantic Interaction in ForceSPIRE 
+The  semantic  interactions  in  ForceSPIRE  are:  placing 
+information  at  specific  locations,  highlighting,  searching, 
+and annotating in order to incrementally change the spatial 
+layout 
+their  mental  model.  The  primary 
+parameters  of  the  force-directed  model  that  are  being 
+updated  through  this  learning  model  are  the  importance 
+values of the entities.  
+Document  Movement.  The  predominant  interaction  in  a 
+spatial  workspace 
+repositioning) 
+documents.  In  previous  work,  we  have  demonstrated  how 
+users can perform both exploratory and expressive forms of 
+this type of interaction [9]. In ForceSPIRE, we allow for the 
+following  exploratory  interaction  (i.e.,  interaction  that 
+allows users to explore the structure of the current model, 
+but  does  not  change  it).  Users  are  able  to  interactively 
+explore the information by dragging a document within the 
+workspace, pinning a document to a particular location (see 
+Figure  8),  as  well  as  linking  two  documents.  When 
+dragging a document, the force-directed system responds by 
+finding the lowest energy state of the remaining documents 
+given  the  current  location  of  the  dragged  document. 
+Mathematically, this adds a constraint to the stress function 
+being  optimized  (in  this  case  the  force-directed  model). 
+This  allows  users  to  explore  the  relationship  of  that 
+document in comparison to the remaining documents.  
+In addition to the exploratory dragging of a document, users 
+have the ability to pin a document. By pinning a document, 
+users  are  able  to  incrementally  add  semantic  meaning  to 
+locations in their workspace. By specifying key documents 
+to  user-defined  locations,  the  layout  of  the  remaining 
+documents will adapt to these constraints. Thus, users can 
+explore  how  documents  are  positioned  based  on  their 
+similarity  (or  dissimilarity)  to  the  pinned  documents.  For 
+instance,  if  the  layout  places  a  document  between  two 
+pinned  documents, 
+the  particular 
+document holds a link between the two pinned documents, 
+sharing entities that occur in both. 
+Finally,  users  can  perform  an  expressive  form  of  this 
+interaction  by  linking  two  documents,  performed  by 
+dragging  one  document  onto  another  pinned  document.  In 
+doing so, ForceSPIRE calculates the similarity between the 
+documents,  and  increases  the  importance  value  of  the 
+entities  shared  between  both  documents.  As  a  result,  the 
+layout will place more emphasis on the characteristics that 
+make those two documents similar. 
+Highlighting.  When  highlighting  a  term,  ForceSPIRE 
+creates an entity from the term (if not already one), and the 
+importance  value  of  that  term  is  increased.  Similarly, 
+highlighting  a  phrase  results  in  the  phrase  being  first 
+parsed for entities, then increasing the importance value of 
+each  of  those  entities.  For  example,  Figure  11  shows  the 
+effect of highlighting the terms “Colorado” and “missiles” 
+in the document pointed to with the arrow. As a result, the 
+
+it  may 
+
+imply 
+
+that 
+
+ 
+Figure  9.  The  Effect  of  adding  an  annotation  (“these 
+individuals  may  be  related  to  Revolution  Now”)  to  the 
+document shown with an arrow. As  a result,  the document 
+becomes 
+linked  with  other  documents  mentioning  the 
+terrorist organization “Revolution Now”.  
+
+presence of these displays creates an environment in which 
+the  virtual  information  (in  this  case  the  documents)  can 
+occupy  persistent  physical  space.  As  a  result,  users  are 
+further  immersed  into  the  spatial  metaphor,  as  they  can 
+point and quickly refer to information based on the physical 
+locations.  
+Constructing the Spatial Metaphor 
+The spatial layout of the text documents is determined by a 
+modified  version  a  force-directed  graph  model  [11].  This 
+model  functions  on  the  principle  of  nodes  with  a  mass 
+connected  by  springs  with  varying  strengths.  Thus,  each 
+node has attributes of attraction and repulsion: nodes repel 
+other  nodes,  and  two  nodes  attract  each  other  only  when 
+connected  by  a  spring  (edge).  The  optimal  layout  is  then 
+computed  by  iteratively  calculating  these  forces  until  the 
+lowest energy state of all the nodes is reached. A complete 
+description of this algorithm can be found in [11].  
+We  apply  this  model  to  textual  information  by  treating 
+documents  as  nodes  (an  overview  is  shown  in  Figure  6). 
+The entire textual content of each document is parsed into a 
+collection  of  entities  (i.e.,  keywords).  The  number  of 
+entities corresponds to the mass of each document (heavier 
+nodes  do  not  move  as  fast  as  lighter  nodes).  A spring  (or 
+edge) represents one or more matching entities between two 
+nodes.  Therefore,  the  initial  distance  metric  is  a  based  on 
+co-occurrence  of  terms  between  documents.  For  example, 
+two  documents  containing  the  term  “airport”  will  be 
+connected  by  a  spring.  The  strength  of  a  spring  (i.e.  how 
+close together it tries to place two nodes) is based on two 
+factors:  the  number  of  entities  two  documents  have  in 
+common,  and  the  importance  value  associated  with  each 
+shared entity (initially, importance values are created using 
+a  standard  tfidf  method  [16]).  The  sum  of  all  importance 
+values add up to 1. 
+The resulting spatial layout is one where similarity between 
+documents  is  represented  by  distance  relative  to  other 
+documents.  Similarity  in  this  system  is  defined  by  the 
+strength of the spring between two documents. A stronger 
+spring  (and  therefore  a  larger  amount  of  shared  entities) 
+will pull two documents closer together, and thus represent 
+two similar documents. 
+
+ 
+
+ 
+Figure  10.  Searching  for  the  term  ”Atlanta”,  documents 
+containing the term highlight green within the context of the 
+spatial  layout.  Additionally,  the  importance  value  of  entity 
+“Atlanta” is increased. 
+
+other  documents  containing  that  term  are  clustered  more 
+tightly. 
+Searching.  When  coming  across  a  term  of  particular 
+interest, analysts usually search on that term in order to find 
+other  occurrences.  In  a  spatial  workspace,  this  is  of 
+particular  importance,  because  the  answer  to  “where  the 
+term  is  also  found”  is  not  only  given  in  terms  of  what 
+documents,  but  also  where  in  the  layout  those  documents 
+occur. The positions of documents containing the term are 
+shown in context of the entire dataset, from which users can 
+infer the importance of that term (as shown in Figure 10).  
+ForceSPIRE  first  creates  an  entity  from  the  search  term 
+(unless  it  is  already  one),  then  increases  the  importance 
+value  of  the  search  term.  Figure  10  gives  an  example  of 
+how a search result appears in ForceSPIRE. Searching for 
+the  term  “Atlanta”,  documents  that  contain  the  term  are 
+highlighted  green,  and  links  are  drawn  to  show  where  the 
+resulting documents are in relation to the current document.  
+Annotation.  Annotations  (i.e.,  “sticky  notes”)  are  also 
+viewed as a form of semantic interaction, occurring within 
+the analytic process, from which analytic reasoning can be 
+inferred. When a user creates a note regarding a document, 
+that semantic information should be added to the document. 
+For example, if Document A refers to “Revolution Now” (a 
+suspicious  terrorist  group),  and  Document  B  refers  to  “a 
+group of suspicious individuals”, and the user has reason to 
+believe  these  individuals  are  related  to  Revolution  Now, 
+adding a note to Document B stating “these individuals may 
+be  related  to  Revolution  Now”  is  one  way  for  the  user  to 
+add semantic meaning to the document.  
+ForceSPIRE  handles  the  addition  of  the  note  (shown  in 
+Figure 9) by 1) parsing the note for any currently existing 
+entities,  then  2)  increasing  the  importance  value  of  each, 
+and 3) creating any new springs between other documents 
+sharing these entities. In the example in Figure 9, edges are 
+created between Document B and Document A (as well as 
+any  other  documents  that  mention  “Revolution  Now”). 
+Additionally,  if  the  note  contains  any  new  entities  not 
+currently in the model, they are created, with the intent that 
+
+ 
+
+ 
+Figure 11. The effect of highlighting a phrase containing the 
+entites  “Colorado”  and  “missiles”.  Documents  containing 
+these  entities  move  closer,  as  the  increase  in  importance 
+value increases the edge strength.  
+
+the 
+
+importance  values  of 
+
+any future entities that may match to that note can be linked 
+at that time. ForceSPIRE also handles cases where notes are 
+edited,  with  text  added  or  removed  from  the  note,  by 
+updating  the  entities  associated  with  the  document,  and 
+adjusting 
+these  entities 
+accordingly. 
+Model Updates 
+Each  of  the  semantic  interactions  in  ForceSPIRE  impacts 
+the  model  by  updating  the  importance  values  of  entities, 
+and  the  mass  of  each  document.  The  calculation  for 
+updating the importance value of an entity is the same for 
+each interaction. If an entity was “hit” (i.e., it was included 
+in  a  highlight,  it  was  searched,  it  was  in  a  note,  etc.), 
+ForceSPIRE increases its importance value by 10%. As the 
+sum  of  all  importance  values  of  entities  adds  up  to  1, 
+ForceSPIRE  subtracts  an  equal  amount  from  all  other 
+entities’ importance values. As a result, importance values 
+decay over time, and entities that are rarely used during the 
+analysis  have  less  impact  on  the  layout.  The  mass  of  a 
+document  uses  a  similar  calculation,  in  that  each  time  a 
+document  is  “hit”  (i.e.,  text  was  highlighted,  it  was  the 
+result of a search hit, etc.), it increases by 10%.  
+When  undoing  an 
+standard 
+the 
+“Control+Z”  keyboard  shortcut,  a  linear  history  of  the 
+interactions will be reversed, and the importance values of 
+affected  entities  will  be  returned  to  their  prior  values  (as 
+well  as  document  masses).  As  for  the  locations  of  the 
+documents,  the  reverted  importance  values  and  document 
+masses  will  be  responsible  for  updating 
+layout. 
+However, this does not guarantee that the layout will return 
+to  the  exact  previous  view,  and  the  user  may  find  it 
+necessary to perform small adjustments. 
+The model updates used in ForceSPIRE serve as an initial 
+approach at how to couple semantic interactions with model 
+updates. Other, more complex methods may exist, and we 
+encourage  further  research  in  this  area.  Sensemaking  is  a 
+complex exploratory process. As such, semantic interaction 
+
+interaction  using 
+
+the 
+
+through 
+
+more  central  documents.  While  reading 
+the 
+documents, he highlighted phrases of interest. For example, 
+he highlighted the phrase “Nizar A. is now known to have 
+spent six months in Afghanistan”. In doing so, ForceSPIRE 
+increased  the  importance  value  of  the  entities  within  the 
+phrase,  particularly  “Afghanistan”  and  “Nizar  A”.  As  a 
+result, the layout forms more tightly around those entities. 
+Each change incrementally changes the layout. 
+Continuing  with  his  investigation,  he  began  searching  for 
+words  of  interest  (e.g.,  “weapons”,  “Colorado”,  “Atlanta”, 
+etc.). ForceSPIRE provided him with quick visual feedback 
+on where in the dataset each terms showed up (the search 
+result  for  “Atlanta”  is  shown  in Figure  10).  In  addition  to 
+gaining an overview of the distribution of the term within 
+the  dataset  (by  highlighting  each  document  containing  the 
+term  green),  ForceSPIRE  treats  performing  a  search  as 
+either  creating  a  new  entity  from  the  search  term,  or 
+increasing the importance value if an entity corresponding 
+to the search term already exists. As a result of the multiple 
+search terms and highlights corresponding to locations (e.g., 
+“Atlanta”,  “Los  Angeles”,  “Missouri”,  etc.),  ForceSPIRE 
+adapts  the  spatialization  by  creating  a  more  geographic-
+oriented layout (shown in the “Mid Stage” layout in Figure 
+12).  
+During  further  investigation,  he  began  opening  more 
+documents and adding annotations to documents where he 
+found  information  missing  that  he  knew.  For  example, 
+Figure  9  shows  how  he  opened  one  document  where 
+“suspicious individuals” were mentioned. Earlier, he read a 
+document  containing 
+terrorist 
+organization  named  “Revolution  Now”.  While  reading 
+about  the  suspicious  individuals,  the  other  information  in 
+the document triggered him to make a connection between 
+these  individuals  and  Revolution  Now.  He  made  added  a 
+note  to  the  document  about  the  suspicious  individuals 
+stating  “these  individuals  may  be  related  to  Revolution 
+Now”. As a result, ForceSPIRE parsed the note for entities, 
+added  them  to  the  document,  and  pulled  the  document 
+closer to other documents containing the entity “Revolution 
+Now”.  
+After  continuing  his  investigation  in  this  manner,  he 
+ultimately  made  the  connections  within  the  dataset  to 
+uncover  the  terrorist  plot.  The  progression  of  the  spatial 
+layout,  shown  in Figure 12, shows the final layout, where 
+he  was  able  to  pinpoint  regions  of  the  layout  as  being 
+important  in  his  finding.  Some  of  the  spatial  locations  of 
+clusters  are  a  result  of  him  pinning  documents  to  that 
+region (e.g., “Atlanta”, “Los Angeles”, etc.). These pinned 
+documents are shown in red. Perhaps more interestingly is 
+not the regions that were created as a result of him pinning 
+documents  to  that  location,  but  rather  how  the  remaining 
+documents respond in the layout. For example, in the final 
+state  shown  in  Figure  12,  a  group  of  documents  began  to 
+emerge  in  the  middle  of  all  the  pinned  locations.  Upon 
+examining  these  documents,  he  discovered  that  these 
+
+information  about  a 
+
+the 
+
+layout 
+
+ 
+
+interaction, 
+
+instances  during 
+
+ 
+Figure 12. The incremental change of the spatial layout (main 
+view  of  ForceSPIRE)  from  the  initial  to  the  final  state. 
+Through  semantic 
+incrementally 
+changed  based  on the  semantic  input of the user. We labeled 
+the regions based on what the user told us the regions meant to 
+him at each stage. 
+can  enable  analysts  to  explore  their  hypothesis  in-situ, 
+while  the  provenance  of  their  insights  is  captured  and 
+stored. An open area of research is what analyzing the soft 
+data might reveal about the analytic process. For instance, if 
+the  importance  values  of  entities  converge  on  a  small 
+number  of  entities,  specific  biases  might  be  revealed. 
+Similarly, 
+the  analysis  when  new 
+hypotheses  are  being  explored  may  be  indicated  by 
+diverging importance values. 
+Use Case 
+We  demonstrate  the  functionality  of  ForceSPIRE  through 
+the  following  use  case.  In  this  scenario,  we  simulate  an 
+intelligence  analysis  scenario  where  the  task  is  to  find  a 
+hidden terrorist plot in a pre-constructed, ficticious textual 
+dataset.  The  dataset  consists  of  50 
+text  documents, 
+containing  a  complex  terrorist  plot  (explosives  are  being 
+transported to various cities in the U.S. using trucks). The 
+combination of the task of finding the hidden terrorist plot 
+and  the  textual  dataset  is  representative  of  daily  work 
+performed  by  professional  intelligence  analysts  [8].  The 
+analysis  described  below  lasted  70  minutes,  and  was 
+performed  by  an  individual  computer  science  graduate 
+student.  
+The user began the investigation by loading the collection 
+of  documents  into  ForceSPIRE.  The  documents  were 
+automatically  parsed  for  entities  using 
+the  LingPipe 
+keyword  extraction  library  [1].  From  these  entities,  an 
+initial layout was generated, shown in Figure 12(top). From 
+this  layout,  he  began  investigation  by  reading  through  the 
+
+ 
+
+interpreting 
+
+leverage 
+
+interactions 
+
+DISCUSSION 
+Unifying the Sensemaking Loop 
+With the fundamentally different role occupied by semantic 
+interaction, we explore a new design space for interaction in 
+visual analytic tools. With the addition of soft data, and a 
+model  capable  of 
+the  user’s  analytical 
+reasoning,  we 
+that  are  already 
+occurring in the spatial analytic process to further aid users 
+in their sensemaking process.  
+With  semantic  interaction,  the  amount  of  formalization 
+between foraging and sensemaking (Figure 13) on the part 
+of the user is reduced. For instance, in moving a document, 
+users  can  formulate  a  hypothesis  based  on  that  document, 
+expecting  similar  documents 
+to  follow.  ForceSPIRE 
+attempts to update the layout based on the interaction, and 
+gives the user feedback. Thus, the foraging stage occurs as 
+a  result  of  the  hypothesis  being  formed  through  semantic 
+interaction.  By  not  forcing  users  to  over-formalize  their 
+analytic  reasoning  too  early  in  order  to  forage  for  the 
+relevant  information,  semantic  interaction  creates  a  more 
+seamless 
+transition  between 
+foraging  and  synthesis, 
+unifying the sensemaking loop.  
+Future Work 
+Semantic 
+interaction,  as  a  concept,  opens  up  many 
+possibilities for further research, such as: what interactions 
+to  capture  and  store,  which  parameters  of  the  model  to 
+update,  how  to  store  the  soft  data,  and  which  models 
+present a metaphor that can be extended upon.  
+In  order  to  make  more  concrete  claims  regarding  the 
+usability  and  effectiveness  of  ForceSPIRE  (and  thus,  of 
+semantic  interaction),  a  formal  user  study  is  needed.  Our 
+plan is to introduce ForceSPIRE to professional intelligence 
+analysts  and  have  them  solve  scenarios  that  model  their 
+daily  task,  such  as  one  of  the  VAST  datasets  [2020].  The 
+observations  and  feedback  from  these  users  will  provide 
+ecological validity for semantic interaction. 
+CONCLUSION 
+In  this  paper  we  have  discussed  how  the  concept  of 
+semantic  interaction  leads  to  a  new  design  space  for 
+interaction 
+information. 
+Semantic  interactions  occur  directly  within  the  spatial 
+metaphor,  support  spatial  cognition,  and  exploit  spatial 
+analytic  interactions.  We  describe  semantic  interaction, 
+discussing  the  three  components  required  –  capturing  the 
+interaction, 
+the  analytical  reasoning,  and 
+updating  the  mathematical  model.  Further,  we  present 
+ForceSPIRE, designed for semantic interaction with textual 
+information, discussing its functionality and demonstrating 
+how it can be used through a use case. Lastly, we discuss 
+how  semantic  interaction  has  the  opportunity  to  unify  the 
+sensemaking  loop,  creating  a  more  seamless  analytic 
+process.  In  allowing  users  to  interact  within  the  spatial 
+metaphor, they can remain more focused on their analysis 
+of  the  data,  without  having  to  become  experts  in  the 
+underlying mathematical models of the system.  
+
+in  spatializations  of 
+
+interpreting 
+
+textual 
+
+ 
+
+Figure  13.  The  sensemaking  loop,  illustrating  the  complex 
+sequence  of  steps  used  by  intelligence  analysts  in  order  to 
+gain insight into data.  
+ 
+documents  are  about  the  terrorist  organization  using  “U-
+Haul”  or  “Ryder”  trucks  for  transportation  between  these 
+locations. ForceSPIRE placing these documents in between 
+these  cities  in  the  layout  was  helpful,  as  these  documents 
+contain  information  “connecting”  the  events  in  these 
+locations.  Immediately  after  noticing  this  event,  he  also 
+made use of the expressive form of interaction, performed 
+by dragging two of these documents together to determine 
+what  made  them  similar.  After  seeing  that  it  was  indeed 
+terms  such  as  “Ryder”  and  “U-Haul”,  the  layout  formed 
+more tightly around these terms. 
+ForceSPIRE interpreted the analytical reasoning of the user 
+through the creation of new entities that were not found by 
+the  initial  keyword  extraction,  as  well  as  the  increase  of 
+importance values of existing entities. This is evidenced by 
+the  creation  of  39  new  entities  during  the  course  of  the 
+analysis.  LingPipe  extracted  89  initial  entities  from  this 
+dataset,  and  at  the  time  of  completing  our  investigation 
+ForceSPIRE  included  128.  Examples  of  newly  created 
+entities  are  “big  event”,  “grenades”,  “Fisher  Island”, 
+“weapons”,  and  others.  The  ability  for  new  entities  to  be 
+created  via  semantic  interaction  did  not  interfere  with  the 
+fluid sensemaking process of the user. Instead, it aided the 
+process  by  creating  new  entities,  which  in  turn  created 
+semantically relevant connections within the dataset. 
+In  addition  to  creating  new  entities,  existing  entities 
+dynamically  changed  their  importance  value  based  on  the 
+semantic 
+interpreted 
+reasoning 
+interactions.  Examples  of  entities 
+their 
+importance  values  are  “Atlanta”,  “Revolution  Now”, 
+“Colorado”,  “L.A.”,  and  others.  As  a 
+the 
+ForceSPIRE incrementally adapted the layout based on the 
+user  input.  This  shows  that  adjusting  importance  values, 
+creating entities, and changing locations of key documents 
+helped  the  user  discover  the  structure  of  the  dataset,  and 
+ultimately make out the hidden terrorist plot.  
+
+of 
+that  changed 
+
+analytical 
+
+result, 
+
+the 
+
+ 
+
+ACKNOWLEDGEMENTS 
+This research was funded by the NSF grant CCF-0937071 
+and the DHS center of excellence. 
+REFERENCES 
+1.  Alias-i. 2008. LingPipe 4.0.1. City, 2008. 
+2.  i2 Analyst's Notebook. City. 
+3.  Alsakran, J., Chen, Y., Zhao, Y., Yang, J. and Luo, D. 
+
+STREAMIT: Dynamic visualization and interactive 
+exploration of text streams. In Proceedings of the IEEE 
+Pacific Visualization Symposium, 2011.  
+
+4.  Andrews, C., Endert, A. and North, C. Space to Think: 
+Large, High-Resolution Displays for Sensemaking. In 
+Proceedings of the CHI '10, 2010.  
+
+5.  Callahan, S. P., Freire, J., Santos, E., Scheidegger, C. E., 
+
+C, Silva, u. T. and Vo, H. T. VisTrails: visualization 
+meets data management. In Proceedings of the 
+SIGMOD international conference on Management of 
+data (Chicago, IL, USA, 2006). ACM.  
+
+6.  Cowley, P., Haack, J., Littlefield, R. and Hampson, E. 
+
+Glass box: capturing, archiving, and retrieving 
+workstation activities. In Proceedings of the workshop 
+on Continuous archival and retrival of personal 
+experences (Santa Barbara, California, USA, 2006). 
+ACM.  
+
+7.  Dou, W., Jeong, D. H., Stukes, F., Ribarsky, W., 
+
+Lipford, H. R. and Chang, R. Recovering Reasoning 
+Processes from User Interactions. IEEE Computer 
+Graphics and Applications, 2009. 
+
+8.  Endert, A., Andrews, C., Fink, G. A. and North, C. 
+
+Professional Analysts using a Large, High-Resolution 
+Display. In Proceedings of the IEEE VAST Extended 
+Abstract (2009).  
+
+9.  Endert, A., Han, C., Maiti, D., House, L., Leman, S. C. 
+
+and North, C. Observation-level Interaction with 
+Statistical Models for Visual Analytics. IEEE VAST, 
+2011. 
+
+10. Frank M. Shipman, I. and Marshall, C. C. Formality 
+
+Considered Harmful: Experiences, Emerging Themes, 
+and Directions on the Use of Formal Representations 
+inInteractive Systems. ACM CSCW, 8, 4, 1999, 333-352. 
+
+11. Fruchterman, T. M. J. and Reingold, E. M. Graph 
+
+drawing by force-directed placement. Software: Practice 
+and Experience, 21, 11 1991, 1129-1164. 
+
+12. Gotz, D. Interactive Visual Synthesis of Analytic 
+
+Knowledge. IEEE VAST, 2006. 
+13. Heer, J. prefuse manual, 2006. 
+14. Heer, J., Mackinlay, J., Stolte, C. and Agrawala, M. 
+
+Graphical Histories for Visualization: Supporting 
+Analysis, Communication, and Evaluation. IEEE 
+Transactions on Visualization and Computer Graphics, 
+14, 6 , 2008, 1189-1196. 
+
+ 
+
+15. Jeong, D. H., Ziemkiewicz, C., Fisher, B., Ribarsky, W. 
+
+and Chang, R. iPCA: An Interactive System for PCA-
+based Visual Analytics. Computer Graphics Forum, 28, 
+2009, 767-774. 
+
+16. Karen A Statistical Interpretation of Term Specificity 
+
+and its Application in Retrieval. Journal of 
+Documentation, 28, 1972, 11-21. 
+
+17. Marshall, C. C., Frank M. Shipman, I. and Coombs, J. 
+
+H. VIKI: spatial hypertext supporting emergent 
+structure. In Proceedings of the European conference on 
+Hypermedia technology (Edinburgh, Scotland, 1994). 
+ACM.  
+
+18. Olsen, K. A., Korfhage, R. R., Sochats, K. M., Spring, 
+M. B. and Williams, J. G. Visualization of a document 
+collection: the vibe system. Information Process 
+Management, 29, 1 1993, 69-81. 
+
+19. Pirolli, P. and Card, S. Sensemaking Processes of 
+
+Intelligence Analysts and Possible Leverage Points as 
+Identified Though Cognitive Task Analysis Proceedings 
+of the International Conference on Intelligence 
+Analysis,2005, 6. 
+
+20. Plaisant, C., Grinstein, G., Scholtz, J., Whiting, M., 
+
+O'Connell, T., Laskowski, S., Chien, L., Tat, A., Wright, 
+W., Gorg, C., Zhicheng, L., Parekh, N., Singhal, K. and 
+Stasko, J. Evaluating Visual Analytics at the 2007 
+VAST Symposium Contest. Computer Graphics and 
+Applications, IEEE, 28, 2 2008, 12-21. 
+
+21. Shrinivasan, Y. B. and Wijk, J. J. v. Supporting the 
+
+analytical reasoning process in information 
+visualization. In Proceedings of the CHI '08 (Florence, 
+Italy, 2008). ACM.  
+
+22. Skupin, A. A Cartographic Approach to Visualizing 
+Conference Abstracts. IEEE Computer Graphics and 
+Applications, pp. 50-58, January/February, 2002. 
+
+23. Thomas, J. J., Cook, K. A., National, V. and Analytics, 
+C. Illuminating the path. IEEE Computer Society, 2005. 
+24. Torres, R. S., Silva, C. G., Medeiros, C. B. and Rocha, 
+
+H. V. Visual structures for image browsing. In 
+Proceedings of the conference on Information and 
+knowledge management (New Orleans, LA, USA, 
+2003). ACM.  
+
+25. Wise, J. A., Thomas, J. J., Pennock, K., Lantrip, D., 
+
+Pottier, M., Schur, A. and Crow, V. Visualizing the non-
+visual: spatial analysis and interaction with information 
+for text documents. Morgan Kaufmann Publishers, 1999. 
+
+26. Wright, W., Schroh, D., Proulx, P., Skaburskis, A. and 
+
+Cort, B. The Sandbox for analysis: concepts and 
+methods. In Proceedings of the CHI '06 (New York, 
+NY, 2006). ACM.  
+
+27. Yi, J. S., Melton, R., Stasko, J. and Jacko, J. A. Dust & 
+magnet: multivariate information visualization using a 
+magnet metaphor. Information Visualization, 4, 4, 2005, 
+239-256. 
+
+

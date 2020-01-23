@@ -1,0 +1,1387 @@
+article  orion : system modeling ,  transformation visualization  multidimensional heterogeneous  networks  jeffrey heer1 adam perer2  information visualization  2014 , vol .
+13(2 )
+111–133 
+ó author(s ) 2012  reprints permissions : 
+sagepub.co.uk/journalspermissions.nav 
+doi : 10.1177/1473871612462152  ivi.sagepub.com 
+abstract 
+study complex activities scientific production software development requires model-  ing connections heterogeneous entities including people , institutions , artifacts .
+despite advances  algorithms visualization techniques understanding social networks , process construct-  ing network models performing exploratory analysis remains difficult time - consuming .
+article ,  present orion , system interactive modeling , transformation , visualization network data . 
+orion ’s interface enables rapid manipulation large graphs — including specification complex link-  ing relationships — simple drag - - drop operations desired node types .
+orion maps user  interactions statements declarative workflow language incorporates relational operators  ( e.g. selection , aggregation , joins ) network analytics ( e.g. centrality measures ) .
+demonstrate  features enable analysts flexibly construct compare networks domains online health  communities , electronic medical records , academic collaboration , distributed software development . 
+keywords  social network analysis , data management , data transformation , graphs ,  programming  visualization , end - user  introduction  social network analysis gained popularity ,  researchers developed novel statistical  tech-  niques , visualization designs , user interfaces ( uis )  sense large networks .
+,  advances process assembling net-  work model granted .
+data collected  analysis , scraped online data sources  tabulated traditional surveys , inher-  ently form network instead raw list  data points corresponding attributes .
+ requires analysts extract model net-  work raw data .
+data sets , networks  modeled different ways analysts  hypotheses .
+instance , collecting data-  base online community data , analysts wish    relationships  community  examine  members measure collaborative support rela-  tionships thread posts measure disse-  mination information relationships  communities measure comparative com-  munity success .
+analyze scenarios ,  completely different network models need  extracted original data . 
+1stanford university , stanford , , usa  2ibm research , hawthorne , ny , usa  corresponding author :  jeffrey heer , stanford university , 375 gates hall , 3b , stanford ,
+ 94305 - 9035 , usa . 
+email : jheer@cs.stanford.edu  112  information visualization 13(2 )  typically , refactoring network data vari-  ous models requires custom code analysts  days weeks write .
+possible  express necessary operations database  queries , requires defining schema , loading  data , forming correct structured query  language ( sql ) queries — including complex queries  multitable joins .
+repeating level effort  new questions emerge undermine explora-  tory process dissuade analysts  testing hypotheses . 
+address issues , introduce orion , sys-  tem interactive modeling ,  transformation ,  visualization network data .
+visualization  data mining techniques proposed  social network analysis , orion focuses often-  overlooked early stages data transformation  assessment forming network models source  data .
+orion enables iterative , exploratory analysis  reducing hours programming transformation  minutes interactive , graphical specification . 
+following contributions :  unified model workflow language network data . 
+use relational data tables fundamental  model represent networks edge tables  domain integer node indices .
+chose model  correspond analytic databases  scalable network analysis packages .
+workflow lan-  guage provides relational operators graph  analysis routines enables generation reusa-  ble analysis scripts .
+language supports range  analysis tasks including network definition , filtering ,  aggregation , statistics computation . 
+graphical ui iterative network manipulation  visualization .
+orion translates ui actions ,  drag - - drop menu commands , operations  underlying workflow language .
+orion sup- 
+ports specification complex linking relation-  ships .
+system constructs graph model  links table columns ; traversal algorithm  identifies feasible linking paths defining networks  set user - selected node types .
+approach  simplifies difficult process specifying  series relational join aggregation operations . 
+network defined , orion enables  visual exploration tabular , matrix , node - link  views .
+networks exported use  analysis tools . 
+rest article structured follows :  reviewing prior work , describe data model  present orion interface .
+, discuss  enabling algorithms  network extraction  describe workflow language .
+preliminary  evaluation orion , demonstrate use case  studies online health communities , electronic medi-  cal records ( emr ) , academic collaboration , dis-  tributed software development .
+discuss future  work conclude . 
+article extended version earlier pub-  lication1 features network operators ,  details workflow language , additional  case study .
+version includes appendix 1  implementation evaluation details foreign  key identification algorithm . 
+related work  orion draws related work graph visualization ,  analysis tools , data management .
+discuss  selected relevant projects . 
+graph visualization techniques 
+researchers devised variety visualization  techniques networks.2 common representa-  tions social network analysis node - link dia-  grams ( typically force - directed placement )  adjacency matrix views.3 hybrids  proposed.4,5 approaches organize ele-  ments according linkage structure graph . 
+alternative approach plot network data  according attributes nodes,6,7 scat- 
+ter plot - called semantic substrates.6 network  links drawn nodes .
+approach  suited assessing potential correlations  node attributes network structure . 
+related vein , paperlens8 uses multiple coordi- 
+nated views network attributes explore publica-  tion databases .
+netlens system9 generalizes  approach support networks fit ‘ ‘ content-  actor ’’ data model , , bipartite networks  publications authors .
+contrast , orion supports  arbitrary number  linking relationships  data tables . 
+researched means dealing large  graphs excess tens thousands nodes .
+common  strategies include filtering aggregation .
+van ham  perer10 introduce degree - - interest function11  reduces graph small connected subset  nodes based set foci ( e.g. search results ) . 
+pivotgraph7 honeycomb12 aggregate networks  ‘ ‘ rolling ’’ edges according node attributes ,  example , analyst collapse social network  corporate employees summed connection  strengths workers’ geographic locations . 
+manynets13 enables comparison multiple net-  works tabular view  summary graph  heer perer  113  statistics .
+desired , users view standard  ( albeit scalable ) node - link diagrams demand . 
+orion draws prior work : provides  node - link matrix visualizations supports net-  work aggregation based node attributes .
+,  sole exception netlens,9  systems assumes - defined network given  input tool .
+tools help user  define assess variety network models derived  arbitrary data tables . 
+network analysis tools  recent years seen proliferation network anal-  ysis tools .
+tools combine visualization  statistics interactive environment.14–18  programming libraries19–21 menu - driven  interfaces22,23 provide access analysis algo-  rithms . tools support data import  common file formats ( e.g. graphml ) external  data services ( e.g. twitter facebook ) , little  facilitate flexible construction network mod-  els arbitrary data tables .
+orion intended  replacement systems ; , designed  assist unsupported early stages network anal-  ysis .
+process , enables use down-  stream tools . 
+managing graph data  domain related work graph data manage-  ment .
+database researchers24,25 developed storage  strategies query languages25 large networks . 
+similarly , number commercial systems — including  neo4j , infinitegraph , allegrograph , dex , orientdb ,  sones / graphdb — available .
+sys- 
+tems facilitate storage , indexing , querying large  graphs goals different  orion . 
+representative applications include managing social  network websites querying motifs biological net-  works .
+orion instead supports construction  assessment network models source data . 
+data declarative transformation  script reapplied new data inspected  review data provenance .
+light , orion  understood end - user programming tool  network manipulation . 
+orion particularly influenced ( named  relation ) polaris system,29 commercia-  lized tableau .
+polaris maps drag - - drop opera-  tions data variables formal algebra  database queries resulting visualiza- 
+tions derived .
+key insight work  value deeply coupling visualization tools rich  facilities data transformation .
+orion similarly pro-  vides ui user actions mapped state-  ments underlying data transformation language . 
+polaris enables filtering aggregation opera-  tions single data table , orion instead enables  manipulation multiple tables , including linking rela-  tionships realized relational joins . 
+systems similar orion gilbert  auber’s30 work automated graph generation  liu et al.’s31 ploceus .
+systems enable  analysts extract network models tabular data  visualize results .
+gilbert auber30 analyze  relationships table columns infer hier-  archy values ( e.g. continent , country , city ) . 
+present interactive visualization hier-  archies users select desired network  model links entities according shared column  values .
+, system operates single  table .
+ploceus31 enables users similarly extract net-  works based shared properties provides suite  filtering , aggregation , subdivision operations . 
+like orion , ploceus defines operations  relational algebra includes support mul-  titable joins .
+, orion provides sophisti-  cated subdivision methods unique providing  mixed - initiative support  network construction :  orion automatically infer foreign key relationships  recommend possible network models   requested node types . 
+interactive data transformation querying  data model  orion focuses transforming data create network  models .
+related vein , research systems  designed assist early stages data cleaning  reformatting .
+google refine26  data 
+wrangler27 enable analysts reformat input data sets  correct data errors prior analysis .
+d - dupe28  assists process finding resolving duplicates  data set .
+tools  prepare data tables prior network modeling  orion .
+similar wrangler , orion produces output  variety data models exist handling graph data ;  common structures include adjacency lists adja-  cency matrices .
+, representations  insufficient network analytics , cases  networks derived prior data source  permitting number models parameterizations . 
+simple example , social network extracted  email archive include links sen-  ders recipients include links 
+co - recipients .  114  information visualization 13(2 ) 
+prior research visualization toolkits noted  value representing networks relational tables:32  row represents edge graph , columns  contain source target node values edge  attributes .
+format provides sparse representa-  tion network , enables easy querying attri-  butes , supports efficient edge iteration .
+ hand , format inefficient path following  ill - suited graph algorithms .
+ result , adopt hybrid data model orion . 
+use relational data tables base representa-  tion .
+tables represent individual node types  linking relationships .
+times , node types  implicit attributes table ; orion provides  methods promote values table . 
+networks inferred foreign key rela-  tions tables .
+design allows support  arbitrary node types linking relations facili-  tating integration relational databases . 
+specific linking relationship chosen  ( described subsequent sections ) , orion models  network specialized edge table format . 
+source target columns represent incident nodes  zero - based integer indices .
+efficient process- 
+ing , indices default row index corre-  sponding node table .
+scheme works edges  involving single node table leads index colli-  sions different tables .
+ensure distinct keys ,  bias indices given table total size  previous tables .
+mapping node tables  index ranges stored metadata edge table . 
+graph analysis routines , force - directed  layout clustering coefficient calculation , per-  formed simply iterating edges .
+,  methods — including shortest path betweenness  centrality algorithms — traverse graph fol-  lowing paths .
+accordingly , edge tables support  construction caching adjacency lists , repre-  sented array sorted integer arrays - links ,  - links , . 
+integer - based representation provides multiple  benefits .
+particular , allows rapid access associ-  ated node data index - based table lookups facil-  itates  creation efficient network analysis  routines . representing nodes zero - based integers  enables use simple arrays state  graph algorithms , avoiding overhead associative  data structures . 
+data model , like rest orion , imple-  mented java programming language .
+ implemented data structures processing  routines , data model intentionally chosen  correspond modern analytic data-  bases scalable network analysis packages.21  future work , want exploit correspondence  implement workflows massively scalable plat-  forms .
+use relational operators  workflow possible , later leverage  shared - parallel databases .
+said ,  shortly implementation  scales networks involving millions elements  supports broad class data sets . 
+orion ui  orion ui , analysts import source data  multiple formats , specify variety network  models , compute statistics , visualize results . 
+analysts export resulting data  declarative script defining transformation work-  flow .
+section , describe design  orion interface concrete usage scenario .
+ provide detailed descriptions orion ’s ui  components . 
+usage scenario  consider real - world example researcher (  computer science phd student ) studying online  health communities organized medical condi-  tions ( e.g. asthma , lupus , lyme disease ) .
+driving  questions include following : community  dynamics structure vary conditions ?
+ gain new insights co - occurrence symp-  toms conditions ?
+explore questions ,  analyst collected 3 million discussion posts  medhelp.org , public online health site .
+initial  database consists single table row rep-  resents post site .
+table columns include  forum ( community ) , user pos- 
+ter , post date , title discussion thread ,  post text . 
+data , analyst like analyze  social networks individual communities .
+ begins importing data table ( large comma-  separated values ( csv ) file ) orion .
+table  columns displayed schema viewer  figure 1(a ) . 
+, define entities interest  form nodes graph .
+currently ,  entities reside implicitly values table .
+ analyst right - clicks username field selects 
+‘ ‘ promote ’’ resulting context menu .
+opera-  tion causes username values extracted  table : new table constructed row  unique user username field origi-  nal table replaced foreign key referencing  new table .
+analyst wishes model social net-  work based co - participation discussion  heer perer  115  figure 1 .
+orion user interface , consisting ( ) schema viewer manipulating data tables
+( b ) linker  interface creating network models .
+analysts drag - - drop desired node types linker orion responds  ( c ) table possible linking paths .
+( d ) preview display shows resulting network data .
+analysts specify  ( e ) aggregation , ( f ) filtering , ( g ) splitting ( subdivision ) criteria . 
+thread , similarly promotes thread_id field  entity interest . 
+analyst like construct social  network users .
+drags d field ( pri-  mary key ) username table drops  linker interface center orion window  ( figure 1(b ) ) .
+interface allows analysts specify  desired source target node types .
+response ,  orion calculates feasible network definitions involv-  ing username entities nodes ( figure 1(c ) ) .
+ case , feasible result : linking users  shared threads .
+analyst wish consider  alternatives , promote entities ( e.g.  individual forums ) . 
+analyst clicks check box include  linking path , orion responds showing preview  resulting graph ( figure 1(d ) ) .
+orion previews  include list tables generated  inspector individual table values .
+,  analyst like limit exploration single  community .
+drags forum field schema  viewer filter region linker ;  selects ‘ ‘ asthma ’’ forum resulting search  box ( figure 1(f ) ) .
+preview updates turn . 
+satisfied , analyst clicks ‘ ‘ create network ’’  button add network data set ; schema  viewer updates new edge table containing links  posters ‘ ‘ asthma ’’ forum  posted thread ; default , edge weights  indicate number shared threads  users . 
+right - clicking ‘ ‘ asthma ’’ edge table , ana-  lyst reveals additional options .
+choose  visualize network matrix node - link  diagrams .
+matrix overview ( figure 2(a ) ) , dis-  joint structure community evident ,  suggests newcomers arrive com-  munity , ask question , gets handled  handful leaders .
+suggests commu-  nity serve ‘ ‘ answer mill ’’ place  prolonged discussion .
+analyst dig deeper  filtering visualization highly  active cluster pivots node - link visualization  ( figure 2(b ) ) .
+, nodes sized post  count colored according betweenness cen-  trality , analyst focus specific nodes inter-  est analysis . 
+individual tables inspected visualized  bar scatterplot charts .
+visualization  supports interactive filtering controls .
+filtering  116  information visualization 13(2 )  figure 2 .
+orion visualizations online health communities .
+( ) sorted matrix view online asthma forum .
+ central leaders divide responses incoming questions .
+( b ) node - link diagram highly active cluster  forum .
+( c ) plot betweenness centrality values different network models , sized number posts .
+ models similar centrality distributions . 
+graph highlight interesting patterns , analyst  save filtered edge table additional entry  schema viewer .
+analyst compute  statistics , including node degrees , betweenness cen-  trality , clustering coefficients .
+statistical operators  add additional columns implicated edge and/or  node tables . 
+analyst like assess effects  different network model .
+current model  includes edges connecting posters  thread .
+happens instead thread respondents  connected thread initiator ?
+analyst  follows modeling path ,  time adds join predicate : right - clicks linking  path network chooses filter ohc  table linked .
+particular data , pos-  ter post_id 0 initiated thread  post_id greater 0 responded thread . 
+data characteristics specific partic-  ular community data , analyst enters customized  formula resulting dialog : int1(‘‘post_id ’’ ) = = 0  & & int2(‘‘post_id
+’’ ) . 0 . 
+formula ensures source node  corresponds thread initiator target  node respondent .
+analyst creates network ,  computes betweenness centrality values , compares  heer perer  117  values models scatter plot ( figure  2(c ) ) , notes high degree correlation .
+deci-  des proceed simpler model connecting  initiators respondents . 
+analyst like start comparing  health communities .
+revisits previous  steps , instead filtering forum field , drags  split region .
+preview display shows  entries multiple networks — forum . 
+completion , networks grouped  subtree schema viewer .
+context menus  grouping element enables batch invocation  statistics contained networks ( figure 13  example ) .
+analyst continue analyzing  diverse characteristics health communities . 
+ui design  previous scenario illustrates subset model-  ing visualization functionality supported orion . 
+describe ui components detail .
+ way , outline additional functionality ,  ability merge multiple sets edges con-  struct ‘ ‘ rollup ’’ graphs node aggregation . 
+schema viewer .
+schema viewer ( figure 1(a ) )  provides overview data tables current  data set supports data manipulation .
+source data  tables generated edge tables indicated icons . 
+table attributes displayed icons indicating  data type , special annotations primary  foreign key fields .
+context menus enable analysts  rename remove tables columns , create  derived columns expression language , specify  primary keys , promote values col-  umns new node tables .
+analysts access sta-  tistics visualization options context menus . 
+drag - - drop interactions allow analysts specify  foreign key relations ( dragging field pri-  mary key matching type ) , import data ( drag-  ging external data files operating system ) ,  query network models ( dragging fields  linker interface ) . 
+link specification .
+linker interface ( figure 1(b ) )  primary means defining networks .
+analysts  start dragging desired node types fields source  target nodes .
+orion responds computing  possible linking paths source target  nodes displays results table .
+users  select resulting paths include edges  resulting network model . 
+filtering .
+analysts drag - - drop fields spe-  cify filtering criteria ( figure 1(f ) ) .
+filters  created table involved network .
+orion  generates dynamic query widgets — selection lists  range sliders — based data type .
+corresponding  predicates applied network construc-  tion limit nodes edges included final  graph .
+addition single - table predicates , analysts  specify filtering criteria directly joins .
+filterable  joins presented context menu analyst  right - clicks linking path .
+currently , orion sup-  ports user - defined join predicates specified java  code statements . 
+splitting .
+alternative filtering split net-  work collection subgraphs .
+examples include  inspecting time slices splitting categorical vari-  ables ( e.g. health forums ) .
+specify subdivision cri-  teria , user drags node edge field split  region ( figure 1(g ) ) .
+orion displays widget  enabling parameterization ( figure 3 ) .
+networks  generated splitting appear schema viewer  grouped collections support batch operations . 
+orion supports splitting categorical variables  create separate networks isolate given node  edge attribute value .
+quantitative temporal  attributes , users specify window functions ;  sliding windows ( sequentially cover domain )  anchored windows ( extend fixed ref-  erence bounds ) supported .
+course ,  splits useful : naively splitting node ’s primary  key results collection singleton graphs .
+ special case , orion instead interprets split  request subgraphs centered node pro-  vides graph distance control .
+analysts extract  nodes edges specified graph distance  isolate egocentric networks .
+example , distance  1.0 includes neighbors , distance 1.5 includes  neighbors edges , distance  2.0 includes nodes hops , . 
+rollup .
+specifying desired node types  drag - - drop , typically primary key node  table .
+analysts instead drag - - drop non-  key field , aggregated network constructed  uses unique field values individual nodes  ( cf . pivotgraph7 ) .
+underlying nodes grouped  according requested field ; edges groups  tallied provide aggregate representation  underlying graph . 
+multiple edge sets .
+selecting multiple linking  paths , orion allows analysts construct networks  multiple edge sets .
+multiple paths selected ,  linking interface enables controls choosing  aggregate function merging edge sets ( figure 1(e ) ) ;  options include basic logical ( , ) arithmetic  ( count , sum , product ) operations .
+arithmetic  118  information visualization 13(2 )  figure 3 .
+network splitting operations supported orion : ( ) subdivision category , ( b ) sliding windows , ( c ) anchored  windows , ( d ) subgraph extraction . 
+operations , analysts provide numerical weights  edge set . 
+preview confirmation .
+analysts manipulate  settings linker display , preview panel  updates response ( figure 1(d ) ) .
+analysts review  number size tables generated inspect  values individual tables .
+analyst satis-  fied linking definition , click  ‘ ‘ add network ’’ button add resulting tables  schema viewer . 
+visualization .
+orion supports visualizations : table  displays , basic data graphics ( bar scatterplot charts ) ,  node - link diagrams , matrix views ( figure 2 ) . 
+visualizations shown separate window dif-  ferent visualization types accessible tabbed panes . 
+windows include schema viewer showing  data tables implicated current visualization . 
+orion uses java implementation protovis spe-  cification language33 generate visualizations . 
+analysts parameterize display filtering ,  sorting , zooming , visual encoding controls .
+node- 
+link diagrams use force - directed layout algorithm  based physical simulation .
+matrix rows col-  umns sorted node attributes linkage  hunt patterns data .
+layout sorting  facilities included analytic operators  described section ‘ ‘ network analysis .
+’’
+interac-  tive data transformation methods constitute primary  contributions article , leave consideration  additional visualization facilities future work . 
+network definition extraction  having introduced orion interface , discuss  underlying algorithms enabling interactive  network modeling .
+relational tables provide  flexible model representing data , network extraction  involves creating linking queries regularly include  join operations .
+result , defining net-  works query language sql tedious  error - prone .
+simplify process , orion models  connections data tables analysts request  networks simply specifying desired node types . 
+system enumerates possible network defi-  nitions , analyst choose . 
+describe steps process follow-  ing subsections .
+, construct linking graph  models foreign key relations tables .
+ response user queries ( i.e. desired node types ) ,  run search algorithm graph identify  valid linking paths . linking paths translated  relational algebra statements extracting net-  work edge tables . 
+linking graph construction  aid network definition , orion builds linking graph :  data structure supports user queries possi-  ble network models .
+nodes linking graph cor-  respond data table fields ( columns ) ; primary key  fields assumed represent specific node type . 
+edges graph represent relationships  fields ( e.g. foreign key references )  define network node types .
+given input  schemas set data tables , orion constructs  directed graph containing types edges :  1 .
+key reference ( r ) edges link primary foreign  2 .  keys representing node type . 
+intratable
+( t ) edges link foreign keys  table .
+edges represent potential linking paths  node types . 
+heer perer  119  authors 
+d  lastname  firstname  institutions 
+d 
+ links  authorid  pubid  instid 
+authornum  ( r ) key reference  ( t ) intra - table  ( c ) conjugate  publications 
+d  year  title  type  venue 
+abstract  figure 4 .
+schema linking graph publications data .
+primary keys italicized .
+links styled according  edge type ; links arrows bidirectional ( r t edges ) .
+graph data structure finding networks  involving pair node types . 
+3 .
+conjugate ( c ) edges link foreign key f  node type primary key p different node  type table containing f  additional foreign key references
+p.  edge types straightforward
+,  conjugate edges merit explanation .
+edges  represent paths join linking table  form unipartite graph — process analogous  multiplying bipartite adjacency matrix transpose . 
+key reference ( r )
+intratable ( t ) edges bidirec-  tional ;
+conjugate ( c ) relationships unidirectional ,  foreign key primary key different node  type .
+figure 4 shows schema linking graph  publication data extracted association  computing machinery ( acm ) digital library . 
+ linking  accurate  automated key finding .
+facilitate accurate key  assignments —  graph  models
+— orion includes mechanisms automatically  infer single - column primary foreign key relations . 
+identify primary keys , algorithm finds columns  distinct elements row ranks  candidates according data type ( e.g. integers  preferred strings dates ) position ( left -  columns — minimal index position —  preferred ) .
+- ranking result table  chosen key , users free override  choice interface . 
+selected primary key , orion identifies candi- 
+date foreign keys finding table columns  matching data type .
+scores candidate  logistic regression classifier .
+regression  model includes following features , p  primary key column , f candidate foreign key col-  umn , dist returns set distinct column values ,  lcs returns longest common subsequence  strings  jdist(p)ndist(f)j  jdist(p)j  fa =  jfj  fb = 1   jfi : fi 2 dist(p)gj  jlcs(name(p ) , name(f))j  max(jname(p)j , jname(f)j )  jlcs(table(p ) ,
+name(f))j  max(jtable(p)j , jname(f)j )  fd =  fc =  words , candidate keys classified  features concerning ( ) distinct primary key  values occur candidate column , ( b )  elements candidate column occur pri-  mary key column , ( c ) similarity column  names primary candidate keys , ( d )  similarity primary key table candi-  date key column .
+trained classifier  corpus test data , including examples arti-  cle .
+classifier achieves accuracy 98.9 %  cross - validation tests .
+details classifi-  cation approach ,  features  evaluation methods , provided appendix 1 .  including additional  linking path search  given linking graph desired source target  fields ( node table primary keys ) , orion searches  graph identify valid linking paths .
+paths  translated relational algebra statements ( e.g.  projections joins ) create network edge table . 
+orion ’s path - finding method ( algorithm 1 ) per-  forms breadth - traversal starting source  field .
+traversal algorithm allows repeated visits  node greedily prunes search step  testing validity candidate path segments .
+ given path segment path , denote recently  added field u , previously added field t ,  newly encountered candidate field v. fields  120  information visualization 13(2 )  algorithm 1 findpaths(source , target )  maxoccurrences  source = target?3 : 1  paths  fg  queue  new queue(½source )  queue  path  dequeue(queue )  len  length(path )  t  len \ 2?null : previous(path ) 
+u  current(path )  e 2 edges(u )  v  v : v 2 e ^ v 6¼ u   jfn 2 path : samebase(n , v)gj .
+maxoccurrences 
+b  samebase(t , u , v ) ^ ( len .
+2
+_ :
+sametable(u , v ) )  c  type(e ) 6¼ r ^
+sametable(t , u , v )  d  type(e ) = c ^:(sametable(t , u ) ^ samebase(t , v ) ) 
+: ( _ b _ c _ d )  newpath  append(copy(path ) , v )  v 6¼ target  enqueue(queue , newpath )  reverse(newpath )
+62 paths  paths  paths [ fnewpathg  end  end  end  end  return path  corresponding base field indicating node type :  primary key fields reference , foreign  key fields reference primary key .
+defini-  tions place , valid paths defined following  conditions , roughly correspond boolean  variables , b , c , d algorithm 1 :  1 .
+excluding source target fields , paths  contain base twice . 
+2 . base field occur times con-  secutively u v table . 
+3 .
+consecutive fields  table , field reached key ref-  erence edge ( r ) . 
+4 .
+field reached conjugate edge ( c ) can-  added path ( ) t u  table ( b ) t v share base  field , differs u.  algorithm returns set valid linking paths  analyst define network model .
+ simplify results , algorithm culls paths  identical previously found path reversed .
+ addition , orion sorts returned paths  shorter paths variation base field types  listed . 
+network extraction  analyst selected set desired linking  paths , orion translates paths relational alge-  bra statements evaluated provide network  edge table .
+figure 5 provides examples  input  queries resulting linking paths relational  algebra statements ( data linking graph  figure 4 ) . 
+mapping paths relational algebra straightfor-  ward .
+cases , pair fields ( ignoring source  target fields ) maps columns  table , adjacent pairs related equijoin  shared inner field .
+special cases conjugate  edges , encountered pair instead joined  , ‘ ‘ self - edges ’’ table result  odd number path elements ( e.g. tree data  paths form t
+:p  !r  t :
+f  !r  t : p ) . 
+analyst selects network definition , orion  executes resulting queries constructs edge  table integer node indices  ( section ‘ ‘ data  model ’’ ) .
+orion similarly turns filtering criteria speci-  fied ui relational selection predicates  incorporated queries .
+analyst selects  multiple linking paths , orion construct multiple  edge tables .
+orion forms union edge  tables ; analysts specify aggregation func- 
+tions orion ui control multiple  edge sets merged . 
+orion workflow operators  addition transforming data , goal orion  enable construction editable reusable  analysis workflows .
+workflows realized  declarative language incorporating relational  operators network statistics .
+mapping ui  actions statements language , orion sup-  ports data manipulation visualization
+ export reusable scripts record  data provenance .
+section , describe oper-  ations supported language  model analyze network data . 
+orion workflow task operator accepting  named parameters .
+operators mod- 
+ify data set : collection named tables .
+workflow  simply sequence tasks .
+figure 6 shows exam-  ple workflow case study section ‘ ‘ online  health communities .
+’’ orion externally represents  workflows simple xml format .
+table 1 sum-  marizes operators . 
+data import export  orion
+’s
+input / output operators read data dif-  ferent sources write results variety formats . 
+heer perer  121  query :
+authors.id × publications.id ( ties people papers )  authors.id r−→ links.authorid t−→ links.pubid
+r−→ publications.id  ⇒ πauthorid , pubid(links )  query : authors.id × authors.id ( social ties people )  authors.id r−→ links.authorid t−→ links.pubid c−→
+authors.id  ⇒
+πauthorid , pubid(links ) 1pubid = pubid πpubid , authorid(links ) 
+authors.id r−→ links.authorid t−→ links.instid c−→
+authors.id  ⇒ πauthorid , instid(links )
+1instid = instid πinstid , authorid(links )  figure 5 .
+example linking queries results returned orion ’s search algorithm .
+linking path edges annotated  type : key reference ( r ) , intratable ( t ) , conjugate ( c ) edges .
+paths mapped relational algebra statements  extract network edge tables . 
+table 1 .
+orion workflow language . 
+operator  read  write  rename  key  reference  remove  derive  rank  promote  link  filter  subgraph  split  rollup  stats  layout  description  import data table network . 
+export data table(s ) network . 
+rename field , table , network . 
+set primary key status field . 
+add foreign key reference field . 
+drop field , table , network .  define new field according user - defined function . 
+add sort indices ordered field values . 
+extract field values new node table . 
+extract network defined linking paths . 
+filter nodes edges network according predicate . 
+extract subgraph given distance set focus nodes . 
+segment network field values ( e.g. categories , time slices ) . 
+create aggregate graph according node field values . 
+compute given network statistic store new field . 
+compute spatial coordinates nodes layout algorithm ( e.g. force - directed placement ) . 
+relational databases ,  read operator imports data tables external  sources delimited text files ( e.g. comma-  tab - separated values ) ,   graphml dot ( graphviz ) network files .
+network  files translated tables , typically node table  edge table .
+delimited text files , orion  infers column data types based contents .
+ write operator writes  tables  extracted networks database files  formats . 
+individual  schema modification  orion includes handful operators modifying  table schemas .
+rename operator renames tables  individual columns .
+key operator indicates  column serves primary key , references  operator assigns foreign key relations .
+foreign key rela-  tions particularly important ,  basis determining feasible linking paths .
+ tables pulled relational databases  122  information visualization 13(2 ) 
+workflow w = new workflow ( ) ;  w.add(tasks.read("ohc " ) ...... // load data file  ... file("ohc.csv " )  ... type("csv " ) ) ;  w.add(tasks.promote("users " )
+.// promote username field  ...
+from("ohc " )  ... select("username " ) ) ;  w.add(tasks.promote("forums " ) //
+promote forum field  ...
+from("ohc " )  ... select("forum " ) ) ; 
+w.add(tasks.link("cp " ) // create forum × forum network  ... path("forums.id " , " ohc.forum " ,  ........
+" ohc.username " , " forums.id " )  ... distinct(true ) ) ;  w.add(tasks.stat("cp " ) // calculate edge weight deviance  ... field("dev " )  ... stat("edgeweightdeviance " ) ) ; 
+figure 6 .
+example orion workflow definition online health case study section ‘ ‘ online health communities .
+’’ 
+workflow shown java code ; workflows persisted simple xml format .  appropriate key relations defined schemas ,  data common formats csv regularly lack  metadata .
+add metadata , key finding  algorithm ( section ‘ ‘ automated key finding ’’ ) generates  sequence key references statements . 
+table transformation  aid creation network models , orion provides  operators manipulating single tables .
+remove  operator simply drops column table .
+derive  operator allows analysts create new columns  writing user - defined function existing columns . 
+orion currently accepts user - defined functions snip-  pets java code dynamically compiled  run - time . 
+ranking table rows .
+rank operator adds new  column containing rank - ordered integer indices .
+rank  statements include sorting criteria :  fields sort ascending descending order .
+ sort order determines set nonrepeating indices . 
+statements group - fields ; group  rank - ordered separately .
+rank operator  create indices enabling nuanced join predi-  cates ( e.g. post_id field scenario sec-  tion ‘ ‘ usage scenario ’’ ) . 
+promoting column values node tables .
+tabular data  contain implicit linking relationships values  embedded column .
+example , single table  research grant awards contain fields princi-  pal investigator ( pi ) , co - pi , institutions  . data , wish form social  networks researchers and/or institutions .
+help  model networks explicitly , orion provides  promote operator .
+given field names ,  promote operator identifies counts dis-  tinct values columns populates  new table schema ( d , value , count ) .
+values  heer perer  123  input table replaced foreign key references  new ‘ ‘ promoted ’’ table .
+operation allows  analysts extract implicit node types explicit  node tables .
+returning grants example , ana-  lyst promote pi co - pi columns create  new node table people ; original table  serves linking table defining network  people nodes . 
+network modeling  core orion language network creation  operators . 
+network definition .
+given set linking paths  input , link operator extracts network ( edge  table ) according process described section  ‘ ‘ network definition extraction .
+’’
+input linking  paths starting ending fields .
+ multiple linking paths provided , link operator  construct single edge table union  - path edge tables .
+resulting table includes  path_id column , indicating linking path gener-  ated link .
+optional aggregation parameter  provided , operator generate final edge table  applying aggregate function group -  source target columns ; aggregate values  edge weights . 
+link operator accepts optional projection  filtering parameters .
+projection parameters consist  node linking table columns include  joins ( included sql select clause ) .
+filter  parameters – value pairs table names  predicate functions .
+single - table predicates (  filtering node linking tables ) - table  predicates ( join predicates linked tables )  accepted .
+link operator accepts boolean para-  meters suppressing self - links unipartite graphs  ensuring distinct edges consid-  ered linking tables .
+enforces preaggrega-  tion linking tables . 
+subnetwork extraction .
+network cre-  ated , orion provides operators extracting sub-  graphs .
+example , analyst want compare  time slices evolving network egocentric  networks extracted larger social graph .
+fil- 
+ter operator creates filtered edge table based set  edge node predicates .
+edges removed  node predicate returns false incident node . 
+given set ‘ ‘ focus ’’ nodes , subgraph opera-  tor returns subgraph containing edges  specified minimum distance .
+orion measures graph 
+distance counting hops summing edge weights . 
+future , plan support degree - of-  interest extraction method introduced van ham  perer.10  orion provides iterators enable repeated  invocation operator sequence parameter  settings .
+iterators useful performing batch oper-  ations , repeated filtering subgraph extrac-  tion .
+use iterators implement split operator  segment networks according categorical  numerical fields .
+numerical data columns , analysts  choose split network sliding window  ( e.g. create separate time slices network )  anchored window ( e.g. evolution net-  work time ) specifying bounds inter-  est .
+iterators enable batch statistics calculation  ( section ‘ ‘ network analysis ’’ ) . 
+network aggregation .
+times analyst  interested aggregate properties graph  leaf - node details ; given social network ,  wish view aggregate connections genders  cities .
+rollup operator aggregates edges accord-  ing specified properties nodes.7,12 rollup  operator generates aggregate edge table node  tables node attributes . 
+network analysis  orion additionally provides network analysis algo-  rithms .
+stats operator computes sta- 
+tistics network stores resulting values  corresponding node edge tables .
+statistics  operator modular , allowing user - defined functions  added workflow language .
+currently ,  functions written java programming  language conform provided interface defini-  tion .
+supported statistics include - degree , - degree ,  betweenness centrality , eigenvector centrality , clustering  coefficient , edge weight asymmetry , edge weight deviance ,  community identification , linkage - based sorting .  metrics common social  network analysis , deserve special mention .
+ edge weight asymmetry deviance measures  inspired van ham et al .
+’s honeycomb12 system . 
+simply logged ratio edge weights  corresponding antiparallel edges directed  graph .
+calculates edge weight  deviates expected value assumes uni-  form random distribution total weight  cells adjacency matrix .
+deviance help iden-  tify edges unexpectedly strong weak strengths ,  particularly dense aggregated networks . 
+community identification performed greedy  newman ’s  optimizing  hierarchical  clustering 
+124  information visualization 13(2 )  modularity metric.34 linkage - based sorting provides  integer sort order nodes attempts mini-  mize distance connected nodes .
+ approximate objective seriating nodes  cluster tree constructed community
+identifi-  cation algorithm.35
+resulting ordering particu-  larly useful   permuting rows columns adjacency  matrix diagram reveal clusters.4  visualization purposes ,  layout operator similar stats operator  instead computes spatial coordinates subse-  quent layout visualization .
+operator currently  supports force - directed layout . 
+summary  summary , transformations supported orion  realized declarative workflow language .
+saved 
+orion sessions simply xml - serialized versions  workflow easily edited reviewed  directly text editor .
+orion interface  enables rapid specification workflows ,  found programmatic use workflow lan-  guage ( figure 6 ) greatly aided data analysis  research groups . 
+case studies  present collection case studies illustrating  orion applied conduct network analy-  ses multiple domains . 
+online health communities  scenario section ‘ ‘ usage scenario ’’ introduced  analysis online health communities .
+addition  comparing social networks individual forums ,  collaborating analyst interested exploring  connections communities .
+cross- 
+posting behavior provide insights comorbidity  medical conditions ?
+demonstrate scenario  orion ui .  assess questions
+, analyst generates  network nodes correspond discussion  forums edge weights
+indicate number dis-  tinct users posted forums .
+con- 
+struct network orion , analyst promotes  username forum fields node tables . 
+analyst requests network forum nodes  source target .
+orion suggests  desired result : linking forums shared users . 
+analyst runs edge weight deviance sta- 
+tistic calculate degree edge weights vary  expected value ( assuming uniform random  distribution ) .
+resulting matrix diagram shown  figure 7 , cells colored deviance . 
+inspecting matrix view sorted  edge table , analyst flagged number unex-  pected connections .
+connections appear indi-  cate possible data errors , example , hearing loss  forum unexpectedly strong connections  forums .
+strong connections indicate inter-  esting co - occurrences ( e.g. cold / flu stress , ear/  nose / throat problems , heart disease ) common  misdiagnoses ( e.g. lupus lyme disease ) .
+orion  enabled observations matter  minutes .
+analyst following  results , example , correlating external  comorbidity data . 
+electronic medical records  case study
+, orion model pro-  gression disease data emr .
+goal  constructing networks allow medical experts  better understand onset symptoms patient  populations , hopefully resulting speedier diagnoses  treatments .
+case study , team consisting  computer scientist ( analyst ) medical  experts ( cardiologist , medical scientists  emergency room doctors , epide-  miologist ) construct network 3.3 million  clinical notes involving 50,000 patients 7 years  model evolution heart failure ( hf ) . 
+analyst begins loading data tables  file menu orion ui .
+analyst imports  emr table , row corresponds clini- 
+cal event associated patient .
+emr table  contains ids events patients , analyst  imports symptomdefinitions table contains  associated metadata , symptomname  symptomdate .
+data set , dates aligned  diagnosis hf , negative dates imply events  patient diagnosed hf positive  dates imply events diagnosis .
+analyst  imports  table ,  patientdefinitions , contains patienttype ,  defines case patient hf con-  trol patient hf .  additional patient metadata  analyst promotes patientids  symptomids fields node tables .
+,  symptom metadata located separate table ,  analyst creates reference symptoms table  symptomsdefinitions table orion ’s auto-  matic key - finding algorithm .
+analyst similarly cre- 
+ates   patientdefinitions table . 
+reference    patients   analyst wishes create network  symptoms co - occur different  heer perer  125  figure 7 .
+matrix view connections online health forums .
+edges weighted number distinct  cross - posters .
+cells colored according edge weight deviance ; green cells indicate values greater  expected red cells indicate values lower expected . 
+patients .
+analyst demands edges  network weight equal number  patients experienced co - occurrence .  , analyst requests network symptom  nodes source target selects  option count distinct patients tabulating  edge weights .
+orion invokes path - finding  method ( algorithm 1 ) presents path  ½symptoms : id !
+emr :
+symptomid !
+emr : 
+found :  patientid !
+symptoms : id. analyst approves  path generates network .
+edge  symptomnetwork , new count field automatically cre-  ated allows analyst track  number unique patients share co-  occurrence symptoms . 
+, analyst interested  symptoms co - occur patient diagnosis  filters network ensure date values  negative .
+analyst runs linkage - based  order statistic obtain sort order matrix visua-  lization minimizes distance connected  nodes .
+resulting networks ( unfiltered filtered )  exported orion visualized  matrixflow,36 shown figure 8 . 
+temporal network analysis .
+having generated over-  view , analyst wants understand co- 
+occurrence network symptoms changes time . 
+based clinical background knowledge , analyst  126  information visualization 13(2 )  patterns progression heart disease .
+ found orion rapidly enabled data exploration  ways previously prohibitively difficult ; prior  attempts required writing custom network modeling  code new hypothesis .
+fact , orion ’s pro-  vided features ( e.g. splitting ) sparked  research questions explored .
+experts  optimistic network analyses eventually  help clinicians earlier diagnoses , large  variability diagnoses patients .
+ability  quickly compare contrast different patient net-  works provided novel evidence hfpef  hfref debate , similar temporal pattern  observed cohorts , suggests despite  pathophysiological differences , hf types  develop co - occurrence patterns .
+ results analysis led publication  medical informatics conference,36 pending  publication medical journal . 
+multivariate network analysis .
+inspired results  analyzing symptoms network ,  medical  experts curious symptoms interact  diagnoses , medications , lab tests . 
+ response , analyst creates co - occurrence network  approach described instead  uses enhancedemr table , row corre-  sponds clinical event specific patient ( symp-  toms , diagnoses , medications , lab tests ) .
+event  eventtype eventdescription metadata .
+akin  technique , analyst requests network  event nodes source target  selects option count distinct patients  tabulating edge weights .
+shown figure 11 ,  resulting network exported orion  styled d337 publication .
+network  filtered d3 com-  mon event co - occurrences . nodes image  diagnoses symptoms .
+types  events ( lab tests medications ) co - occur  present graph . 
+surprised domination symptoms  diagnoses , analyst wonders certain types  events co - occur previous unfil-  tered network .
+find , analyst uses orion  create aggregate network , nodes represent  eventtype edges weighted  times eventtype co - occurs eventtype .  requesting network eventtype nodes  source target , orion generates rolled  aggregate network .
+figure 12 , network ren-  dered matrix cell colored based  edge count . 
+figure 8 .
+matrices co - occurring symptoms extracted  electronic medical records patients hf .
+ filtering constrains symptoms  appear prior hf diagnosis . 
+hf : heart failure . 
+wants focus 18 months leading diagno-  sis hf .
+orion , analysts model temporal  networks split operator subdivide net-  works time windows .
+analysts choose split  symptomdate , setting lower bound 18 months  diagnosis upper bound date  diagnosis .
+analyst performs different types  splits 3-month intervals : binned network  sliding time windows cumulative network  anchored time windows , shown figure 9 . 
+ultimately , analyst decides generate separate  networks different patient cohorts .
+data set ,  different types patients : control  patients hf , hf patients pre-  served ejection fraction ( hfpef ) , hf patients  reduced ejection fraction ( hfref ) .
+par-  ticularly interesting analyst cur- 
+rently research debate hfpef  hfref considered different  disease .
+analyst splits network  patienttype field .
+different patient cohorts  shown anchored time windows figure 10 .  analyzing networks generated  orion , medical experts confirmed novel temporal  heer perer  127  figure 9 .
+matrices co - occurring symptoms , split ( ) anchored ( b ) sliding windows 3-month intervals . 
+figure 10 .
+matrices co - occurring symptoms , split anchored time window patient cohort . 
+hf :
+heart failure ; hfpef : hf patients preserved ejection fraction ; hfref : hf patients reduced ejection fraction . 
+medical experts process mak-  ing sense multivariate analysis clinical con-  text .
+rapid ability generate networks  temporal multivariate features shows promise  validating features critical disease diagnosis . 
+medical collaborators believe orion ’s expres-  siveness help gain better understanding  heart disease . 
+academic production collaboration  orion explore academic production  collaboration networks ,  section  ‘ ‘ linking graph construction ’’ discusses data extracted  acm digital library .
+inspect career prog-  ress computer scientists , use orion construct  social network based co - publication .
+orion ’s  example ,   128  information visualization 13(2 )  figure 11 .
+network commonly co - occurring clinical events extracted electronic medical records  patients heart disease . 
+subgraph extraction facilities ( figure 13 )
+, define  social networks increasing periods time ( e.g.  publications 2000 , 2001 , ) .
+ batch compute betweenness centrality scores  extracted network .
+orion enables easy data  export , subsequently loaded data tableau  analysis , leading plot figure 14 . 
+orion ’s flexibility enables assessment  models .
+example , constructed net-  work researchers published  venue ( promoting linking publication  venue ) year ( specifying join pre-  dicate enforcing matching years ) . 
+acm publication data contribute larger  analysis initiative social scientists  author ’s university .
+scientists studying aca-  demic collaboration collected multiple data  sets indicating links university faculty .
+addi-  tion publication databases , data include depart-  ment phd committee memberships co - pi  relations grants .
+heterogeneous edge sets  combined weighted number ways  form collapsed network .
+orion ’s edge  aggregation features create compare network  models built heterogeneous linking data . 
+figure 12 .
+aggregate network clinical event types . 
+network transformed orion ’s rollup  operator , exported , visualized d3 .  heer perer  129  figure 13 .
+orion subdivide acm co - authorship network publication date .
+split region lower  right provides controls defining filtering window ; preview pane center lists resulting tables .
+ networks created , schema viewer left groups results support batch statistics calculation . 
+figure 14 .
+time - sliced betweenness centrality scores researchers acm digital library .
+centrality scores  normalized year .
+data generated orion exported tableau . 
+software development github  finally , orion collaboration com- 
+puter scientists studying global development patterns  open - source software .
+data investigation  come github , web service hosts open-  source projects .
+github web application  programming interface ( api ) , researchers  130  information visualization 13(2 )  figure 15 .
+matrix diagrams resulting orion analysis github , hosting service open - source software . 
+( ) raw counts follower links cities , sorted geographic proximity ( column nodes ‘ ‘ follow ’’ row nodes  github ) .
+( b ) follower links colored sorted asymmetry .
+( c ) followed links colored deviance expected  value sorted geographically . 
+collected 1,000,000 commits 500,000 expli- 
+cit  ‘ ‘ follower ’’ connections roughly 50,000  users .
+addition , user ’s location geo-  coded according self - reported location string  mapped near - major metropolitan areas (  heller et al.38 details ) . 
+orion , quickly generate analyze  networks extracted data .
+example ,  constructed social networks based commit  history : link included users b  b makes commit repository immedi-  ately a. specify network orion  linking users table commits .
+input  tables : users commits . 
+commit table includes date , project ,  user ( foreign key ) .
+, promote  project ( repository ) table  link users according shared repository .
+limit  links temporally adjacent commits applying  rank operation based commit date  adding join predicate ensures adjacent  ranks included resulting network . 
+construct networks ‘ ‘ follows  ’’ linking users table extracted fol-  lower relations .
+requesting user location attri-  bute node type ( user d ) ,  construct aggregated graph major cities ,  edge weights indicating number connec-  tions users cities .
+apply  edge weight asymmetry deviance statistics  examine differences locales .
+figure 15  shows selected matrix views analysis ( origi-  nally published heller et al.38 ) .
+example ,  figure 15(c ) , paris tokyo  heer perer  131  fewer incoming ‘ ‘ followed ’’ links  expected links assigned randomly san  francisco consistently receives surplus ‘ ‘ followed ’’  links .
+particular images stylized  publication protovis,39 underlying analy-  sis performed completely orion . 
+acknowledgements 
+authors thank diana maclean , sanjay kairam ,  brandon heller , eli marschner , jimeng sun  medhelp sharing data thank anonymous  reviewers suggestions . 
+conclusion future work  article introduces orion , system interactive  modeling , transformation , visualization network  data . providing unified model , workflow lan-  guage , graphical ui iterative network manipu-  lation , construction comparison networks  empower analysts exploratory flexible  analysis .
+case studies involving online  health communities , academic collaboration networks ,  global software development , demonstrate  orion supports visual analysis multidimensional  heterogeneous networks . 
+case studies illustrate orion  applied real - world analysis tasks , study  conducted context collaboration  analysts .
+necessary step  evaluate analysts use orion external assis-  tance .
+user studies representative tasks parti-  cipants certainly help surface usability issues  inform iterative design .
+, believe  important test come analysts indepen- 
+dently applying orion work . 
+analysts gain flexibility create new models  transformations network data orion ,  critical need arises better methods preview  compare constructed networks .
+orion pro-  vides capabilities support tasks , believe  providing sophisticated visual sta-  tistical techniques summarize similarities , differ-  ences , trends , outliers resulting networks  area ripe future research .
+additionally ,  orion provides great power analysts model net-  works match hypotheses , vast number  possibilities construct network daunt-  ing .
+interactive visual representation orion ’s  linking graph assist users understanding  specifying network models .
+future work  provide users proactive automatic suggestions  help uncover network models interesting  meaningful patterns . 
+funding  jeffrey heer supported national science  foundation ( nsf ) grant ccf-0964173  boeing company . 
+references  1 .
+heer j perer a. orion : system modeling , trans-  formation visualization multidimensional hetero-  geneous networks .
+: ieee visual analytics science &  technology ( vast ) , 2011 .  2 .
+herman , melan g marshall ms .
+graph
+visualiza-  tion navigation information visualization : sur-  vey .
+ieee t vis comput gr 2000 ; 6 : 24–43 .  3 .
+ghoniem m , fekete j - d castagliola
+p. read-  ability graphs node - link matrix - based  representations : controlled experiment statistical  analysis .
+inform visual 2005 ; 4 : 114–135 .  4 .
+henry n fekete j - d .
+visually exploring large  social networks .
+: interact , rio de janeiro , brazil ,  september , springer , 2007 , pp .
+604–610 . 
+5 .
+henry n , fekete j - d mcguffin mj .
+nodetrix :  hybrid visualization social networks .
+ieee t vis com-  gr 2007 ; 13 : 1302–1309 .  6 .
+shneiderman b aris a.
+network visualization  semantic substrates .
+ieee t vis comput gr 2006 ; 12 :  733–740 .  7 .
+wattenberg m. visual exploration multivariate  graphs .
+: acm chi , montreal , canada , april , acm ,  2006 , pp . 811–819 .  8 .
+lee b , czerwinski m , robertson g , et al .
+understanding  research trends conferences paperlens .
+: acm  chi extended abstracts , portland , , april , acm 2005 ,  pp . 1969–1972 . 
+9 .
+kang h , plaisant c , lee b , et al .
+netlens : iterative  exploration content - actor network data .
+inform visual  2007 ; 6(1 ) : 18–31 . 
+10 .
+van ham f perer a. ‘ ‘ search , context , expand  demand ’’ : supporting large graph exploration  degree - - interest .
+ieee t vis comput gr 2009 ; 15 :  953–960 . 
+11 .
+furnas gw .
+generalized fisheye views .
+: acm chi ,  boston , ma , april , acm 1986 , pp .
+16–23 . 
+12 .
+van ham f
+, schulz h - j dimicco jm .
+honeycomb :  visual analysis large scale social networks .
+: interact ,  uppsala , sweden , august , springer 2009 , pp .
+429–442 . 
+13 .
+freire m , plaisant c , shneiderman b , et al .
+manynets :  interface multiple network analysis visualiza-  tion .
+: acm chi , atlanta , ga , april , acm 2010 ,  pp . 213–222 . 
+14 .
+adar
+e. guess : language interface graph  exploration .
+: acm chi , montreal , canada , april ,  acm 2006 , pp .
+791–800 . 
+15 .
+gephi .
+http://gephi.org/  16 .
+network workbench .
+http://nwb.slis.indiana.edu/  17 . perer shneiderman b. systematic flexible
+dis- 
+covery : guiding domain experts exploratory data 
+132  information visualization 13(2 )  analysis .
+: intelligent user interfaces ( iui ) , gran canaria ,  canary islands , january , acm 2008 , pp .
+109–118 . 
+community .
+: mining software repositories , honolulu ,  hi , , acm 2011 , pp .
+223–226 . 
+18 .
+smith ma , shneiderman b , milic - frayling
+n , et al . 
+analyzing ( social media ) networks nodexl .
+:  communities technologies ( c&t ) , university park ,  pa , june , springer 2009 , pp .
+255–264 . 
+19 .
+igraph .
+http://igraph.sourceforge.net/  20 .
+jung .
+http://jung.sourceforge.net/  21 .
+leskovec j. snap , http://snap.stanford.edu/  22 .
+batagelj v mrvar a.
+pajek — program large analy-  sis .
+connections 1998
+: 21 : 47 .  23 .
+ucinet .
+http://www.analytictech.com/ucinet/  24 .
+aggarwal c wang h ( eds ) .
+managing mining  graph data .
+springer , new york , 2010 . 
+25 .
+h singh ak .
+graphs - - - time : query language  access methods graph databases .
+: acm  sigmod , vancouver , canada , june , acm 2008 , pp .  405–417 . 
+26 .
+huynh d mazzocchi s. google refine , http://code . 
+google.com/p/google-refine/  27 .
+kandel s , paepcke , hellerstein j , et al .
+wrangler : 
+interactive visual specification data transformation  scripts .
+: acm chi , vancouver , canada , , acm  2011 , pp .
+3363–3372 . 
+28 .
+kang h , getoor l , shneiderman b , et al .
+interactive  entity resolution relational data : visual analytic tool  evaluation .
+ieee t vis comput gr 2008 ; 14(5 ) :  999–1014 .  29 .
+stolte c , tang d hanrahan p. polaris : system  query , analysis , visualization multidimensional  relational databases .
+ieee t vis comput gr 2002 ; 8(1 ) :  52–65 . 
+30 .
+gilbert f auber d. databases graph visualiza-  tion .
+: proceedings international conference information  visualisation , london , uk , july , ieee 2010 , p. 128 . 
+31 .
+liu z , navathe sb stasko jt .
+network - based visual  analysis tabular data .
+: proceedings ieee visual  analytics science & technology ( vast ) , providence , ri ,  october , ieee 2011 , pp .
+41–50 . 
+32 .
+heer j agrawala m. software design patterns  information visualization .
+ieee t vis comput gr 2006 ;  12(5 ) : 853–860 .  33 .
+heer j bostock m. declarative language design  interactive visualization .
+ieee t vis comput gr 2010 ; 
+16(6 ) : 1149–1156 .  34 .
+newman mej .
+fast algorithm detecting community  structure networks .
+phys rev e 2004 ; 69(6 ) : 066133 . 
+doi:10.1103/physreve.69.066133 . 
+35 .
+wilkinson
+l. grammar graphics .
+secaucus , nj :  springer - verlag , 2005 .  36 .
+perer
+sun j. matrixflow : temporal network visual  analytics track symptom evolution disease pro-  gression .
+: amia annual symposium proceedings , chi-  cago , il , november 2012 . 
+37 .
+bostock m , ogievetsky v heer j. d3 : data - driven  documents .
+ieee t vis comput gr 2011 ; 7(12 ) :
+2301–  2309 . 
+38 .
+heller b , marschner e , rosenfeld e , et al .
+visualizing  collaboration influence open - source software  39 .
+bostock m heer j. protovis : graphical toolkit  visualization .
+ieee t vis comput gr 2009 ; 15(6 ) :  1121–1128 . 
+appendix 1  foreign key identification  linking graphs , orion  aid construction  includes facilities automatically identifying foreign  keys .
+given primary key input , orion identi-  fies candidate foreign keys finding table columns  matching data type .
+scores column  logistic regression classifier .
+section ,  discuss training data , feature selection , result-  ing classification performance . 
+training data : multi - table database corpus .
+train  classifier , constructed annotated corpus  multitable databases .
+corpus consists col-  lection tables corresponding primary for-  eign key designations .
+included data sets  discussed article , network  tree data sets .
+collected additional data  web , contents  university  washington xml data repository .
+wrote pro-  gram analyzes structure xml file  repository extracts unique entities ( elements  multiple attributes ) relational  table .
+output set data tables key  relationships . 
+corpus comprises 9 data sets total 50  data tables 283 unique data columns .
+,  extracted 467 feasible primary key / foreign key pairs  matching primary key columns col-  umns data type data set .
+ manually annotated candidate key note  true foreign key .
+467 candidates , 83 for-  eign keys 384 . 
+foreign key classification .
+annotated cor-  pus train logistic regression classifier .
+chose  logistic regression interpretability , applicabil-  ity ranking addition classification , good  performance data .
+expect number  classification approaches ( e.g. support vector  machines ) produce comparable results .
+ experimented variety features interaction  effects .
+, present model provided  best classification performance minimizing  akaike information criterion ( aic ) model selection  score , balances model fit number  model parameters . 
+heer perer  133  table 2 .
+logistic regression coefficients foreign key  classifier . 
+feature  intercept  jdist(p)ndist(f)j  jdist(p)j  fa =  fb = 1   jfi : fi 2 dist(p)gj  jfj  coefficient  223.737
+*
+* *  21.559  19.187 *  28.498
+* *  fc =  jlcs(name(p ) , name(f))j  max(jname(p)j , jname(f)j )  jlcs(table(p ) , name(f))j  max(jtable(p)j , jname(f)j )  fd =  fb  fc  fb  fd  fid
+= name(p ) = 00id00 ^ name(f ) = 00id00 
+statistical significance :
+* p \ 0.05 , * * p \ 0.01 , *
+* * p \ 0.001 . 
+230.809 *  224.871
+*  233.532  27.742 * *  table 2 presents feature definitions  resulting regression coefficients trained  entirety corpus .
+feature definitions , p  corresponds primary key column f candi-  date foreign key column .
+use following  functions : dist returns set distinct column values ,  lcs returns longest common subsequence  strings , returns column , table  returns table containing column . 
+features provide normalized measures  coverage values columns simila-  rities names .
+feature
+fa counts dis- 
+tinct primary key values occur candidate foreign  key column .
+feature fb concerns elements  candidate column occur primary key  column .
+feature fc measures similarity col-  umn names , feature fd measures similarity  primary key table candidate key col-  umn .
+interaction terms fb  fc fb 
+fd  penalize candidates similar names pri-  mary key provide adequate coverage  values .
+finally , feature fid discounts naming similarity  columns simply named ‘ ‘ d , ’’ common  occurrence database schema designs . 
+performance .
+test performance classi-  fier , compared predicted values model  ground truth annotations cross - validation  method .
+individual data set ( table collection ) ,  tested accuracy classifier trained  data sets .
+, round , tested  holdout data included training process . 
+cross - validation folds , find  correctly classify 462/467 ( 98.9 % ) candidate keys . 
+examining misclassifications ,  false - positive false - negatives .
+ false - positive caused significant ( mislead-  ing ) degree similarity .
+false - negatives ,  little naming similarity partial cover-  age primary key values foreign key .
+ result , regression score fails cross threshold  positive classification .
+, ranking can-  didate foreign keys regression score ,  false - negatives rated highly respective  data sets — true positives .
+result ,  orion ui surface pairs - ranked  suggestions , classifier fails correctly  flag candidates true foreign keys . 
+information visualization  http://ivi.sagepub.com/  scalable reasoning system : lightweight visualization distributed analytics  william pike , joe bruce , bob baddeley , daniel best , lyndsey franklin , richard , douglas rice , rick riensche  katarina younkin  information visualization 
+2009 8 : 71  doi :
+10.1057/ivs.2008.33  online version article found :  http://ivi.sagepub.com/content/8/1/71  published :  http://www.sagepublications.com  additional services information  information visualization  found :  email alerts :  http://ivi.sagepub.com/cgi/alerts  subscriptions :  http://ivi.sagepub.com/subscriptions  reprints :  http://www.sagepub.com/journalsreprints.nav  permissions :  http://www.sagepub.com/journalspermissions.nav  citations :  http://ivi.sagepub.com/content/8/1/71.refs.html  downloaded  ivi.sagepub.com  guest 22 , 2011  ( cid:160 )  ( cid:160 )  ( cid:160 )  ( cid:160 )  ( cid:160 )  ( cid:160 )  ( cid:160 )  ( cid:160 )  ( cid:160 )  ( cid:160 )  ( cid:160 )  ( cid:160 )  ( cid:160 )  original article  scalable reasoning system :  lightweight visualization  distributed analytics  william pike  joe bruce  bob baddeley  daniel best  lyndsey franklin  richard  douglas rice  rick riensche  katarina younkin  pacific northwest national laboratory , msin  k7 - 28 , po box 999 , richland , washington  99352 , usa . 
+e - mail : william.pike@pnl.gov  received :
+11 november 2008  accepted
+: 3 december 2008  abstract  central challenge visual analytics creation acces- 
+sible , widely distributable analysis applications bring benefits visual  discovery broad user base possible .
+, support role  visualization knowledge creation process , advantageous allow  users describe reasoning strategies employ interacting  analytic environments .
+introduce application suite called scalable  reasoning system ( srs ) , provides web - based mobile interfaces  visual analysis .
+service - oriented analytic framework underlies  srs provides platform deploying pervasive visual analytic environ-  ments enterprise .
+srs represents ' lightweight ' approach visual  analytics thin client analytic applications rapidly deployed  platform - agnostic fashion .
+client applications support multiple coordi-  nated views giving analysts ability record evidence , assumptions ,  hypotheses reasoning artifacts .
+describe capabilities srs  context real - world deployment regional law enforcement  organization . 
+information visualization ( 2009 ) 8 , 71 - -84 .
+doi:10.1057/ivs.2008.33  keywords : web visualization ; mobile visualization ; analytic reasoning ; law enforcement ;  multiple views ; concept mapping  introduction  advances visual analytics benefit large population end users  possible ,
+application designers consider ways visualiza-  tion accessible ubiquitous .
+mechanism achieve aims  develop analytic solutions scalable key ways .
+, tools  scale large numbers potentially distributed users ; addition  simply supporting synchronous users , scalability dimen-  sion requires tools low barriers entry integrate smoothly  existing workflows .
+second , tools scale range inter-  faces use enterprise ; analysts investigators ,  course work , use handheld devices , desktop computers large  collaborative displays .
+require use special purpose tools  phase work , desirable produce systems offer  underlying analytic capabilities interfaces customized  affordances platform . 
+paper describes approach creating deploying scal-  able visual analytics environment .
+scalable reasoning system ( srs )  web service - based analytic toolkit allows library interoperable ,  customizable components integrated applications bring  benefits ‘ thick client’ stand - environments distributed user  bases .
+components currently include capabilities data clus-  tering , temporal trend identification geographic analysis .
+goal  © 2009 palgrave macmillan 1473 - 8716 information visualization vol .
+8 , 1 , 71 – 84 
+ivi.sagepub.com  guest 22 ,
+2011  www.palgrave-journals.com/ivs/  downloaded  pike et al  support ecosystem interoperable analytic  services allows tool developers , eventually  users , create ‘ mashups’ connect services  flexible ways meet changing analytic requirements . 
+interfaces srs lightweight offload  computationally intensive processing remote services  present   users . 
+streamlined interfaces  simple ,  need scalable analytic infrastructures partic-  ularly acute domains analysis function  distributed large numbers investigators ,  law enforcement .
+implementing srs  regional law enforcement information sharing network  70 local , state federal member agen-  cies 11 000 users .
+diversity user roles ,  requirements , analytic strategies organization  suggests solutions customizable flexible  range analytic contexts , desktop field .
+ srs designed general - purpose analytic environ-  ment , use examples experience deploying  organization illustrate capabilities  approach . 
+growing body research recognizes benefits  distributed web - based1 mobile2,3 visualization  systems .
+systems bring visual analytic capabili-  ties communities previously lacked .
+ srs achieve , decouple analytic algo-  rithms underlie visualization rendering  view .
+approach allows client applica-  tion ( different applications )  use analytic services , meaning  device connect service use  service ’s analytic capabilities .
+separation  computation visualization allows platforms  ubiquity lack computational  power ( handheld devices web browsers )  reap benefit computationally intensive analytics . 
+analytic algorithms platform - agnostic client  applications freedom render analytic results  manner appropriate affordances  platform . 
+srs provides explicit support analytic  reasoning process .
+insight generated  visual discovery left tacit analyst ’s mind  recorded forms disconnected exploratory tools . 
+srs clients embed graphical ‘ reasoning whiteboard’  users link features discovered  exploratory visualization reasoning structures  emerging hypotheses . 
+patterson et al4 identify recursive analytic process  identifying high - value information involves  states : explore , enrich exploit .
+srs enables analysts  efficiently explore large data spaces identify items  potential interest ; coordinated services  displays enrich information collections  weeding lower - value items ; high - value material  exploited discover specific events , attributes  relationships interest . 
+case study law enforcement  increasing amounts incident data available law  enforcement personnel regional national infor-  mation sharing systems .
+systems , nlets  ( http://www.nlets.org ) , provide federated query capabil-  ities allow officers analysts aggregate infor-  mation jurisdictions .
+, greater  access data comes greater data overload ; queries  return hundreds thousands results , making  task identifying incidents , people patterns  interest difficult . 
+currently , analytic capabilities available  users networks .
+search results  exported systems analyst ’s notebook ( http://  www.i2inc.com/products/analysts_notebook/ ) ,  graph visualization techniques point entry  large incident data sets results ‘ spaghetti  graph’ problem quick identification  key patterns difficult .
+addition , desirable  able analyze data situ ( , producing visualiza-  tions immediately queries run , allowing analysts  refine queries ) .
+complicating analysis  streaming nature data ; incident records  available near real time providers  police dispatch systems , meaning users want  understand temporal evolution data , espe-  cially time - critical situations incident response . 
+circumstances manually exporting static data  collections stand - tools inefficient .  formative interaction law enforcement  users , identified srs user categories :  • analysts ‘ traditional’ users visual analytic tech-  nology ; typically work longer - term , strategic  analyses trend identification . 
+• investigators typically work shorter - term , tactical  analyses individual crime cases .
+task  identify suspects close cases . 
+• field officers immediate analytic needs ;  based observation person interest , need  ability quickly identify additional information  help determine course action . 
+approach generalize core analytic function-  ality common abstract components ,  implement interfaces components incorpo-  rate features required . 
+service - oriented analytics  bring lightweight analytic capabilities distributed  users differing roles , srs consists data store ,  external system , suite web  services operate data set client  interfaces implement web services .
+componen- 
+tizing analytic application services allows  analysis algorithms swapped easily . 
+72 
+© 2009 palgrave macmillan 1473 - 8716 information visualization vol .
+8 , 1 , 71 – 84  downloaded 
+ivi.sagepub.com  guest 22 ,
+2011 
+scalable reasoning system  data model  query  srs uses flexible data model allows incident infor-  mation enter repository multiple providers . 
+single schema data analyzed  system conform .
+instead , data record  stored xml document schema file avail-  able system ; schema control  data parsed transformed .
+typically , records  law enforcement implementation srs repre- 
+sented global justice xml data model ( gjxdm ) ,  narrative text records represented  . 
+central object srs data model generic  ‘ document’ table .
+table contains identifying meta-  data particular data record , content  incident record pointer external  location incident record .
+documents  contain user - created data , annotations source  records . 
+service layer  analytic operations executed data stored refer-  enced data layer performed web services .
+ client application capable calling web service  reading / writing soap enveloped data utilize  server - capabilities srs . 
+present , service library consists nearly 60 inter-  operable analytic components .
+services provide  control aspects analytic application devel-  opment ,  creating data repositories adding  information , executing complex queries ,  specifying data processing steps requesting visualiza-  tions .
+tool developer construct analytic appli-  cation chaining services , integrating  - party services . 
+services perform analytic functions , described later  section , output rendering rules client appli-  cations interpret produce visual display .
+ output complete graphics , require versions  customized display environment , services  produce descriptions visual space client appli-  cation developers decide render .
+commu-  nication overhead key consideration distributed  systems users interacting  low - bandwidth mobile networks .
+transmitting declara-  tive representations complete displays helps  achieve parsimonious communication client  server reduces latency , client  use rules handle types interac-  tion ( zooming panning ) making  additional requests server . 
+following sections describe  analytic services available srs ; section  introduces client - law enforcement application  implements services . 
+queries basis identifying record sets analyze  srs .
+srs query services accept requests xml  query schema represents query condi-  tions , additional information  - run query , query  stored ‘ filter’ alert user new incidents  meet conditions .
+query specification creates  application independence abstracts details  data actually stored , schema data  stores search engines subsequently called  service retrieve results . 
+data clustering  central requirements law enforcement  users ability detect associations incident  records jurisdictions time .
+crime analysts ,  instance , attempt identify broad patterns  incident data characterize nature crimes  area .
+course working individual crime case ,  investigators expand inquiry determine  , similar cases exist provide leads .
+finally ,  field officers perform field interview want  immediately know topics covered interview  relate known crimes . 
+case , data clustering provides mechanism  transforming large amounts incident data available  users queries displays help  answer questions .
+query srs returns set  identifiers records satisfy query .
+client  choose request records  displayed traditional list , pass identi-  fiers services perform computation  . 
+request records clustered sets  potentially related incidents , client submits  identifiers createharvest web service .
+harvest  converts record vector terms ( key-  value pairs structured records ) , modified  approach - spire.5 200-dimensional space  containing terms best discriminate inci-  dents projected dimensions create render-  able cluster space . 
+reduce data transmitted  client describe cluster space , apply hier-  archical clustering algorithm .
+algorithm aggregates  records harvest specified number clus-  ters , determined system ( typi-  cally , square root number incidents )  user ( ask given result set grouped  n clusters ) .
+child clusters cluster set  requested subsequent web service calls ,  indefinitely clusters contain document . 
+figure 1 provides sample response getclusters . 
+response includes set clusterinfo elements  © 2009 palgrave macmillan 1473 - 8716 information visualization vol .
+8 , 1 , 71 – 84  73  downloaded  ivi.sagepub.com 
+guest 22 , 2011  pike et al  commanders want spot trends minutes  hours . 
+approach developed themeriver,6  implemented temporal theme detection service  describes change importance time  attributes source data .
+createtemporalvis service  accept input cache path ( resolves  server set incident clusters attributes  ) bins incident records contains based  time range occupied result set ( shorter  time windows divided smaller bins ) .
+service  returns client xml document describes ,  bin , score reflecting importance  theme .
+optionally , client request theme anal-  ysis collection specific terms user interest  specific time window .
+clients use  parameter produce zoomable temporal displays . 
+figure 1 :
+sample output srs data clustering web  services illustrates cluster - space description syntax . 
+interoperability services  corresponding cluster found source data . 
+overcome stateless nature web applications ,  developed mechanism uniquely identi-  fying features visualization client  communicate server features user inter-  acting .
+cluster , instance , identified  ‘ cache path’ identifies fetched  rendered platform .
+example ,  cluster ’s cache path uniquely identifies cluster 1  5 clusters produced harvest 4583 .
+deeper positions  cluster tree represented cache path  appending additional cluster identifiers .
+xy coor-  dinates 2d space cluster provided ,  number incident records cluster ( 5 )  terms best describe cluster ( miami , ship  virus ) .
+client implementations display infor-  mation 2d display folder structure showing  nested clusters . 
+characterize communication reduction benefits  cache path hierarchical clustering , consider  harvest n documents .
+transferring content n  documents 2-space coordinates n docu-  ments client prohibitive n grows . 
+cluster tree , , data transferred  server client path  o(h ) , h height cluster tree ,  o(lg n ) . 
+temporal theme identification  addition identifying clusters related incidents ,  users need understand temporal changes  attributes incidents time .
+temporal  granularity interest varies role ; crime analysts  interested temporal changes  periods weeks months , field officers scene  service - based analytic model allows information  processed variety - party components  rendered .
+‘ mashup’ approach visual  analytics removes barriers extensibility  imposed stovepiped , stand - applications .
+ instance , produce geographic maps showing locations  mentioned text documents , srs web service  running factxtractor ( described pan mitra7 ) ,  system recognizing named entities , including places ,  text documents .
+placenames identified ,  passed geocoding service determines  geographic coordinates , finally  client rendering . 
+analytic interfaces  primary interface srs web browser ,  described subsection .
+describe  mobile interface suitable field officers subsec-  tion mobile analytics . 
+web client overview 
+web interface srs ( figure 2 ) includes seven visu-  alization components users explore  incident collections .
+client - rendering  interaction visualization controlled  javascript dynamic html document object model  ( dom ) manipulation .
+interaction srs web services  performed asynchronous javascript xml  ( ajax ) service calls .
+available views include :  • cluster space view identifies groups potentially  related incidents based shared attributes . 
+•
+temporal theme view shows trends incident  attributes time . 
+74 
+© 2009 palgrave macmillan 1473 - 8716 information visualization vol .
+8 , 1 , 71 – 84  downloaded 
+ivi.sagepub.com  guest 22 ,
+2011  scalable reasoning system  figure 2 : srs web client showing , clockwise left , cluster , faceted , list map views fictional vehicle theft  incidents . 
+•
+faceted browser , provides rapid drill  result sets based incident characteristics . 
+•
+timeline organizes incidents chronological  order . 
+•
+map shows locations involved inci-  dent , location , number incidents  occurred . 
+•
+entity - relation view , allows analysts explore  associations named entities incident data . 
+•
+list view provides access original incident  records . 
+basic unit analysis views ranges  incident document ( cluster , timeline  map views ) , cross - cutting attributes incidents  documents ( temporal theme faceted browser  views ) , specific entities incidents (  entity - relation view ) .
+support range views gives  users choice entry points analysis .
+ views constructed dom manipulation , ensuring  cross - browser compatibility .
+complex  views , including cluster space , theme view entity-  relation view , rendered scalable vector graphics  ( svg ) . 
+achieve coordination views ( enabling  selections visualization reflected  ) , srs web client maintains global selection  model broadcasts selection changes  view view .
+srs client uses focus  context model facilitate incident exploration .
+selec- 
+tions highlight incidents analyst marked  interest views .
+,  context result set shown , de-  emphasized .
+figure 2 , incidents  selected – context shown ( note :  subsequent views , synthetic data shown ) . 
+left display figure 2  current user ’s search history saved queries .
+query  interface provides dynamic creation removal  search fields users perform broad queries  fields create highly complex queries  combination fields .
+law enforce- 
+ment context , search fields include approximately 45  incident attributes activity description , person  description , vehicle description , .
+ users ‘ profiles’ search (  example , particular user frequently look new  incidents near location interest ) , complex query  conditions saved user ’s account allowing  - run later .
+user execute previous  queries list , modify query , add new queries  remove queries longer needed .
+new query  executed added list recent queries , automati- 
+cally capturing analyst ’s search history .
+ © 2009 palgrave macmillan 1473 - 8716 information visualization vol .
+8 , 1 , 71 – 84  75  downloaded  ivi.sagepub.com 
+guest 22
+, 2011  pike
+et al  powerful tool testing query scenarios find  data needed . 
+selecting queries loads data  main display ;
+checkboxes query  allow user create union multiple queries .
+ figure 2 , currently active search ‘ vehicle theft,’  returned 199 incidents . 
+main display shows views  search results ; views open .
+additional  views available menu screen  dragged display ; views  reordered maximized . 
+typical analytic session srs web client  begins exploring cluster temporal theme  views .
+following explore – enrich – exploit model ,  found visualizations display individual  incident records ( timeline ) require  foreknowledge individual features interest (  entities ) typically later analysis .
+users  want explore overviews general patterns  data familiar ; , cluster  display provides summary primary groups  records search results , scan  faceted browser shows distribution attributes  results .
+drilling visualizations  narrow selection manageable number  incidents analysts open ‘ granular incident’  views timeline , map list . 
+list view 
+raw search results shown list view ( figure 2 ,  left ) .
+list includes summary information  block incident link expand entry  read incident record .
+checkbox  incident selects , causing views highlight  incident falls display .
+selections  visualizations , list view automatically  shuffles selected incidents list .
+users  requested behavior allow easily track  contiguous groups – incidents interested , 
+– expense having given  incident maintain static , memorable place list . 
+cluster view  left figure 2 , 199 incidents vehicle theft  clustered according process described  section ‘ data clustering’ .
+, system  grouped incidents seven clusters based shared  attributes .
+view receives cluster xml description  sent getclusters service renders 2d  display .
+cluster represented ellipse  scaled number incidents cluster ; global  relationships clusters preserved ,  nearby clusters similar distant clusters . 
+cluster labeled incident attributes  best describe group incidents .
+hovering mouse  terms provides additional information  attribute value ; hovering  ‘ assistance,’ instance , reveals modus operandi  incidents share perpetrator offered  assistance stopped motorist .
+numbers  cluster indicate number incidents  cluster .
+notation ‘ 0/26’ illustrates selections  kept context .
+26 incidents cluster ,  selected ; user selects group  incidents views , location  incidents cluster space indicated changing  selection counts appropriate cluster labels . 
+analysts ‘ steer’ clustering algorithm speci-  fying incident attributes carry weight . 
+clustering steered default categories  suspect description , vehicle description modus operandi ,  analysts provide preferred  attributes steer .
+result steering  vehicle description , instance , cluster space  reorganized groups incidents  related virtue involving similar vehicles .
+users  manually control number clusters shown ;  selecting clusters creates smaller groups  closely related incidents , selecting fewer aggregates  incidents general categories .  examining - level clusters , analyst  selects clusters examine closely .
+clicking  cluster executes drill - , incidents  selected cluster clustered ( according  number steering criteria analyst speci-  fied ) .
+iterative drill , steering adjusting  cluster numbers , analysts pinpoint associations  incidents difficult identify  reading records .
+incidents clustered modus  operandi allow analyst identify set crimes  performed similar manner .
+drilling cluster ,  analyst ask system cluster  subset suspect description , incidents  perpetrators common . 
+challenge arose formative evaluation  cluster - based view practicing investigators  users unfamiliar multidimensional scaling ,  2d depictions document spaces ( shown figure 2 )  difficult understand .
+instead , discovered  users accustomed organizing data  nested sets folders , folder contains  collection like data items .
+adopted metaphor  alternative , tree - based cluster space visualization .
+ value service - oriented analytic framework  identical service response construct  view ; new tree - based renderer simply ignores  2d coordinates cluster .
+way , views  available web portal , users work  whichever like best . 
+figure 3 illustrates alternative view ,  improved method semantic zoom
+view affords . 
+, semantic zoom amounts - clustering data  given cluster reveal substructure .
+( user ,  amounts taking folder like incidents organizing  76  © 2009 palgrave macmillan 1473 - 8716 information visualization vol .
+8 , 1 , 71 – 84  downloaded 
+ivi.sagepub.com  guest 22 ,
+2011  subfolders contain smaller groups even-  related incidents ) .
+tree - based view allows users  drill branches tree .
+instance ,  figure 3 , cluster 23 incidents indentified  system having key terms ‘ entertainment , gambling ,  . . .
+.’
+user expanded cluster sub-  clusters ; hovering cursor cluster reveals vari- 
+able names incident reports contain key  terms labeling cluster .
+, user hovered  sub - cluster containing 19 incidents descrip-  tive terms bold appear .
+2d cluster view allows  similar drill - interaction , - clustered selec-  tions presented series tabbed windows ,  context parent cluster tree . 
+tree - based view better preserves awareness  subset examined fit overall picture . 
+srs capable clustering unstructured text  structured records xml .
+case struc-  tured data , ‘ document’ collection key - value  figure 3 : tree - based cluster view .
+drilling  cluster space identifies incident groups  compose cluster . 
+scalable reasoning system  pairs enumerate fields values  given record .
+key - value pairs treated  ‘ words.’ shortcoming approach ,  narrative text analysis , words  syntax ( stemming ) considered  token .
+, structured data results  words ‘ personweight :
+175’ ‘ personweight
+: 180’  treated equally different ‘ personweight :
+175’  ‘ personweight :
+300,’ fact user expect  records containing pair cluster  closely records containing .
+remedy ,  implementing alternative clustering algorithms ,  described section discussion future work ,  suited categorical quantitative data . 
+temporal theme view  cluster visualizations individual inci-  dents result set related , necessary  able detect topical trends incident collections  time .
+themeriver - style visualizations common  way depicting trends , srs implements  web - service based theme display .
+temporal theme  information described subsection temporal theme  identification returned web client  svg image xml theme space description ,  produce view shown  figure 4 ( uses data figure 2 ) .
+ view , primary themes detected incident collection  shown legend left chart ;  user explore themes system automatically  identifies data important discriminators  incident clusters raw data ,  change topics displayed include specific  terms interest . 
+client - selection model srs allows incidents  selected view highlighted .
+ instance , user selected collection incidents  figure 4 : temporal trends key themes extracted fictional incidents vehicle theft figure 2 . 
+© 2009 palgrave macmillan 1473 - 8716 information visualization vol .
+8 , 1 , 71 – 84  77  downloaded  ivi.sagepub.com 
+guest 22
+, 2011  pike et
+al 
+cluster view , topics incidents contain  highlighted theme view ,  time windows occupied incidents .
+similarly ,  analyst select regions theme view use  views explore geographic cluster space  themes fall . 
+faceted browser  faceted browser8 interface navigating categor-  ical data efficiently .
+srs , structured data records  automatically organized facets distri-  bution values incident attribute .
+clicking  facet value ( right figure 2 ) , moforcetool-  weapontype = ‘ acetelyne torch,’ highlights , rest  views , vehicle thefts involved  tool fall , causes faceted browser  update display attributes  incidents meet condition distributed .
+ instance , looking vehiclemake field making  selection reveals hondas victim  attack .
+tabs cluster visualiza-  tion , faceted browser maintains local breadcrumb  trail shows facets driving current  selection . 
+timeline map  explore chronological order individual incidents ,  timeline view ( figure 5 , left ) uses simile timeline  component ( http://simile.mit.edu/timeline ) allows  multiple time scales displayed , srs  automatically adjusts scales accommodate  granularity data .
+timelines compressed  attenuated detail incidents occur  detail incidents closely spaced  time .
+individual incidents shown gray markers ;  selected incidents shown green . 
+view , analyst selected inci-  dents vehicle theft henry high school identified  figure 4 .
+map view ( figure 5 , center )  shows incident occurred ; reveals  incidents school ,  included analyst ’s current selection  worth investigation .
+map , incidents  current selection shown green remaining  context unselected incidents shown gray .
+keeping  context available important discovering poten-  tially related information falls outside param-  eters specified selections user  views . 
+entity - relation view  exploration  linked views
+,  analysts identify specific terms entities interest . 
+moving ‘ explore’ phase analysis  ‘ exploit’ phase , winnowed potentially  previous  78  © 2009 palgrave macmillan 1473 - 8716 information visualization vol .
+8 , 1 , 71 – 84  . 
+n  o 
+ t   c 
+o  l  e  m 
+ s  e  h  t 
+t   d 
+e  r  r  u  c  c 
+o  e  v   h  s 
+r 
+e  h  t  o 
+t  
+h  t  g 
+n  
+t 
+
+c  d  n    ,  t 
+f 
+e  h  t  t 
+ h  t 
+f  o 
+n  o 
+ t   c  o  l  e  h  t  :  r 
+e  t  n  e  c  . 
+e  n  
+l 
+e  m 
+ t 
+e  h  t  n   d 
+e  t  c  e 
+l  e  s  t 
+f  e  h  t  
+e  l  c  h  e  v   : 
+t  f  e  l  :  5  e  r  u 
+g   f  . 
+s 
+t  c 
+e  p  s  u  s 
+l  
+n  o  
+t 
+ d 
+d   r 
+e  v 
+o  c  s 
+ d 
+o 
+t  t 
+s 
+y 
+l   n   e  h  t  s  w  o 
+l  l 
+ n 
+o  
+t 
+ c  o  l  t   h  t  d  n 
+u 
+o  r   t 
+l  
+u  b  h  p   r  g  y 
+t  
+t  n 
+e  n 
+ :  t  h  g  r   downloaded 
+ivi.sagepub.com  guest 22 ,
+2011  large incident collection smaller number  investigate deeply .
+phase , central aim  discover relationships entities ,  people , terms attributes specific incidents  locations modus operandi .  automatically produce large semantic  graph showing possible relationships data ,  follow approach jigsaw9 supporting manual  exploration graph relations .
+entity view begins  blank canvas analysts add terms interest  discover views .
+terms  names people organizations , text  string occurs incident record . 
+figure 5 ( right ) , analyst placed node  school center ; following , nodes  incident attributes placed ,  known perpetrator , j. smithson .
+analyst discovers  prior incident perpetrator  committed offense c. yuan , previously  mo ( ‘ feigning offer assistance’ )  thefts henry high school .
+analyst able  identify additional subject interest based  analysis . 
+web service powers entity view runs asyn- 
+chronous queries incidents current  result set ; term user enters , service returns  node indicates incidents contain  attribute .
+produce edges nodes , service  determines pairwise attribute co - occurrence scores .
+ edge drawn attributes co - occur ,  thickness edge increases normalized  correspondence number co - occurrences .  point , analyst propagate  selections cluster view figure 2 determine  incidents identified views  fall cluster .
+, analyst explore  cluster determine additional vehicle thefts  series . 
+mobile analytics  desk - based investigators users  need access analytic functionality srs provides . 
+field officers deployment organizations need  quickly identify groups related incidents mobile  devices carry , devices  impractical scroll long lists text search  results .
+srs data clustering services  present rapid visual picture structure result  space .
+, service - oriented model analytic tools  enables interfaces capabilities constructed  platform device capable connecting  internet .
+advantage approach ,  underlying algorithms stay , analysts  result ( different form )  device connect service .
+ removes uncertainties inconsistencies introduced  scalable reasoning system  figure 6 :  incident clustering interface mobile device . 
+- implementing analytic algorithms different plat-  forms , helps provide consistent user experi-  ence devices user connect  srs . 
+figure 6 shows cluster visualization rendered  windows mobile srs client .
+screen space  limited client , user requirements  field met simpler interfaces , renders  2d ellipses list rectangular clusters containing  search results .
+cluster labeling performed  method figure 3 number incidents  cluster identified .
+selecting cluster drills  tabbed interface , web client .
+ fashion officer quickly groups incidents  organized common people , instance ,  able select cluster incidents corresponds  person interested . 
+interactive visualization technique lacks spatial  relationship information afforded 2d ellipses .
+ resulting cluster list caries
+implied relationship  ordering clusters .
+reduction  2d clusters 1d list reduced  information displayed , resulted information  display field officers familiar , collection  folders . maintaining drill functionality ,  users able perform visual queries reduce  number incident records examined quickly  efficiently . 
+srs clustering services enable powerful method  performing complex queries field .
+query - by- 
+example ( qbe ) method leveraging existing  cluster space retrieve incident records .
+typical use  case approach officer completed  field investigation ( data input interface  srs shown ) .
+based investi-  gation document , wants know  incident crime series .
+officer selects  ‘ like this’ button investigation form ,  © 2009 palgrave macmillan 1473 - 8716 information visualization vol .
+8 , 1 , 71 – 84  79  downloaded  ivi.sagepub.com 
+guest 22
+, 2011  pike et
+al 
+form transmitted srs server  decomposed term vector projected  200-dimensional cluster space composed existing inci-  dents .
+nearest neighbors space identified  euclidean distance returned user ordered  list .
+officer knows incident  described bears similarities incidents occurred  previously , jurisdictions .
+qbe helps build  situational awareness putting new information  context existing information . 
+supporting analytical reasoning  visual environments srs explore  data , gap interactive discovery  process ability tool record discov-  eries shared , evaluated revised .
+ , knowledge discovered visual analysis  kept tacit analyst ’s mind recorded form  disconnected discovery environment ,  written document . 
+srs , analysts graphically describe knowl-  edge construction workflows , linking hypothesis creation  testing visualizations derive  hypotheses .
+srs hypothesis construction  workspace allows feature view , entire view  , saved ‘ reasoning artifact.’  reasoning artifacts essentially pieces information  analyst tagged role ; roles  defined customizable taxonomy knowledge  structures modified johnston10 .
+currently , role  taxonomy includes elements evidence , assumption ,  spatial temporal pattern , causal relationship hypoth-  esis .
+roles refined discussions  analysts represent common high - level tags  apply information .
+roles intentionally  general ; encourage adoption , opted  enforce rigid , multi - level taxonomy force  users adapt reasoning strategies tool ,  provide simple mechanism represent  general roles information play . 
+diagrammatic reasoning srs  typical use case srs begin exploring search  results visually , goal identifying smaller set  potentially related incident records analyze  detail .
+user moves exploratory stage  attempting gain overview data  space investigative mode detailed rela-  tionships entities events interest  articulated .
+visualization portal presented  figure 2 designed exploring overview visualizations ,  begun building extensions srs support  breadth analytic process helping users artic-  ulate relationships . 
+process moving exploration investiga-  tion begins use srs ‘ breadcrumb trail,’  feature added user request .
+users wanted  way keeping track process arrived  set incident results worthy investiga-  tion .
+multiple coordinated views available ,  difficult remember steps took  arrive selection ( instance , user identify  collection potentially related incidents cluster  visualization , reduce selection filtering  geographic area , downselecting  selecting incidents contain particular  attribute theme visualization ) .
+breadcrumbs track  selection history views , user  steps took .
+step visual bread-  crumb icon added selection tracker  srs portal page .
+breadcrumb shows visu-  alization , number data records added  removed current selection view ,  total number records selection step .
+ breadcrumbs allow users track process  arrived set incidents , users  forward interaction history , recre-  ating state environment point  exploration .  point analysis , user open  reasoning whiteboard srs website begin  create artifacts link features srs views reasoning  roles .
+breadcrumb represents state view  given time , encapsulates visualization  data objects .
+breadcrumb captured  whiteboard represent reasoning artifact ,  converted small sticky note ( figure 7 ) .
+ sticky note represents kind information  recorded physical note card , form  tightly coupled analytic environment .
+unlike  paper notes , digital artifacts contain data  interactive visual representation shows view  analyst working generated  note .
+srs components web based , visual-  ization shown portal figure 2 embedded  reasoning artifact whiteboard .
+investi-  gator discovers views particularly useful ,  mark views extract reasoning  workspace marshaled emerging  hypothesis structures .
+cache path approach described  earlier provides unique identifier view state  srs portal , view recreated later  – allowing , instance , colleague decision maker 
+‘ analyst saw’ evaluating reasoning  diagram emerged investigation . 
+annotation artifacts created record  information assumptions .
+reasoning arti-  fact edge connect artifacts ;  instance , analyst create new artifact  describing asserting suspect crimes  person , use argument link  artifacts containing separate clusters incidents .
+exam- 
+80 
+© 2009 palgrave macmillan 1473 - 8716 information visualization vol .
+8 , 1 , 71 – 84  downloaded 
+ivi.sagepub.com  guest 22 ,
+2011  scalable reasoning system  figure 7 : reasoning diagram created web - based srs whiteboard .
+reasoning diagrams allow users capture views  data srs component wire visual representation investigation .
+reasoning artifacts  represented ' sticky notes ' containing summaries contents ; expanded view ( nodes  shown ) , opens interactive visualization analyst saw artifact created . 
+ining map showing location incidents near  school , analyst articulate hypothesis  perpetrator student school .
+hypothesis  recorded new artifact linked emerging  reasoning graph . 
+edges ‘ sticky notes’ srs simply  labeled arrows .
+, reasoning artifacts  right , contain  data visualizations drawn srs portal .
+ way , analysts articulate potentially complex relation-  ships relatively simple visual language .
+instance ,  visualization captured reasoning artifact  tagged ‘ evidence,’ evidence node  converted edge connects assumption  analyst articulated hypothesis , essence data  indicate assumption supports refutes  hypothesis . 
+begin evaluating strength hypotheses ,  analysts describe confidence uncertainty  evidence degree node  graph supports hypotheses .
+bar graph  reasoning artifact represents current belief state ,  clicking graph allows analyst use sliders  update state .
+reasoning whiteboard automat-  ically propagates confidence support scores  diagram produce visual depiction  analyst ’s confidence scores artifact combine  produce likelihood estimates hypotheses ,  dempster – shafer belief network approach described  sanfilippo et al.11 node ‘ sticky note’  diagram gets slider record degree veracity  uncertainty piece information ( figure 8) . 
+dempster – shafer theory permits analysts record  , instance , 75 cent certain piece  information true , instead forcing assert  25 cent chance false  ( case bayesian belief networks , instance ) ,  able articulate 10  cent chance false , remaining 15  cent attributed uncertainty ( true false ) . 
+edges nodes receive sliders allow user  articulate degree edge supports  refutes nodes connected .
+manipu-  lating sliders , analysts play ‘ - if’ games 
+© 2009 palgrave macmillan 1473 - 8716 information visualization vol .
+8 , 1 , 71 – 84  81  downloaded  ivi.sagepub.com 
+guest 22 , 2011  pike et al  figure 8 : reasoning graph , confidence support estimation sliders open , enables analysts record hypotheses  supporting evidence explore srs visualizations . 
+assess likely alternative hypotheses light  evidence assumptions collected . 
+user moves slider , bar graphs node  ( green representing cent truth likelihood , red repre-  senting cent false likelihood gray representing  percentage uncertainty ) update real time .
+user  quickly evidence nodes , instance ,  greatest contributors overall likelihood  hypotheses , identifying ‘ lynchpin’ pieces infor-  mation critical case .
+similarly ,  identify uncertain assumptions  hypotheses , use information target  additional data collection .
+multiplicative  nature conditional probabilities , case  certainty fact lower appear  , exposing actual uncertainty scores  help analysts detect situations existing data  insufficient . 
+reasoning graphs srs implemented  svg provide affordances  concept mapping tools web - based environ-  ment inherently distributed collaborative . 
+analysts create reasoning diagrams reflect  emerging knowledge investigation proceeds ,  access reasoning diagrams web-  connected machine ( , future , mobile  devices ) .
+online approach analysis reasoning  support makes capabilities typically designed  ‘ desk’ available ubiquitous fashion ;  time , place , analyst able  query , visually explore , record knowledge  data .
+analysts’ knowledge spaces follow wher- 
+, making possible ensure  interface ready hand recording knowl- 
+edge structures , created field  office . 
+analysts choose share reasoning graphs  collaborators , allowing multiple users contribute  data shared visual knowledge representation .
+ users working case , instance ,  maintain individual reasoning diagrams represent  personal portion investigation , shared  reasoning space place artifacts  confident , useful  analysts working case . 
+simple , visual hypothesis management interface  srs aimed helping investigators explicit  kinds knowledge typically created  use visual tools , tools typically  support recording .
+recording knowledge ,  srs help investigators analysts bridge gap  exploration case management . 
+related work 
+advantages distributed , web - based analytic systems  reflected growing number applications  follow model .
+geoboost12 offers mapping , charting  collaboration capabilities web mobile clients  server - syntax including data client  views , srs provides open library analytic  82  © 2009
+palgrave macmillan 1473 - 8716 information visualization vol .
+8 , 1 , 71 – 84  downloaded 
+ivi.sagepub.com  guest 22 ,
+2011  services coordinated visualization capabilities . 
+coplink,13 query analysis tool widely law  enforcement , provides graph - based spatial visu-  alization capability web interface ,  provide automated clustering , reasoning support  coordinated visual exploration search results . 
+oculus trist14 sandbox15 provide powerful  mechanisms querying , organizing reasoning  complex data .
+sandbox model inte-  grating variety visual analysis interfaces  exploratory knowledge capture environment ; srs follows  approach , uses distributed web infrastructure  enable analysts explore data collections  web browser .
+emphasize lightweight approach  visualization , creating visual interfaces suitable  deployment distributed networks . 
+facetmap16 offers visual interface faceted browsing  large data collections addresses scal-  ability concerns navigating facets ; provides  solution adaptively changes facet depth displayed  according device display size . 
+long - standing thread research rule-  based visualization , service - based approach  variant .
+rogowitz treinish17 propose rules  guide production visual displays based percep-  tual principles faithful representation underlying  data .
+early approaches service - based visualization trans-  ferred complete visualization descriptions ( example ,  trapp pagendarm18 ) client , offloaded  computationally intensive processing result  client - independent visualization . 
+support srs offers creation reasoning  graphs describe analyst ’s findings similar  found visual argumentation tools  claimaker19 compendium,20 srs allows  argument structures created  application powers data - driven investigations . 
+discussion future work  srs currently offers suite client - server visualiza-  tion components composed interactive  web applications online , lightweight visual analytics . 
+preliminary evaluation srs law  enforcement deployment , identified areas  srs provides benefits heretofore unavailable  investigators , analysts field personnel ,  areas work needed . 
+providing multiple visualization components  users select exploring incident data  allows users tailor choice views task  hand .
+change views explo-  ration exploitation phases analysis , range  components available srs supports examina-  tion broad patterns ( example , cluster  views ) specific relationships ( example ,  entity views ) . 
+scalable reasoning system  feedback users guided design decisions ;  instance , initially default selection state inci-  dents ‘ on,’ users winnow set  exploration deselecting incidents , locations  attributes interested .
+, users  preferred work opposite mode .
+starting  context overview incidents deselected ,  incidents , attributes clusters ‘ turned on’  determine fall views .
+ currently evaluating alternative data clustering algo-  rithm , qrock,21 designed structured cate-  gorical information law enforcement records  provide meaningful clustering inci-  dents .
+outstanding challenge , , remains  seamless integration structured unstructured  data single exploratory environment .
+incident data  providers come form narrative text ,  linking incident attributes different formats  requires new approaches information extraction  integrated srs platform . 
+finally , entity view currently support  sophisticated named - entity recognition ( ner )  automated semantic graph generation , limi-  tation backend service powers  client .
+approach limited graph  nodes terms user expressly asked  .
+powerful feature srs approach , ,  ner service replace current query-  driven approach , long xml response format  remains , client visualization need  change .
+ability instream changes alter-  nate analytic services core benefit service - driven  toolkit . 
+conclusions  support information analysis organizations  analytic function distributed users ,  new scalable visual analytic architectures needed  enable deployment lightweight applications .
+srs  service - oriented analytic toolkit decouples compu-  tationally intensive data processing client interac-  tion , allowing visual analytic applications deployed  web browsers , mobile devices plat-  forms support pervasive access enterprise . 
+srs clients support multiple views enable large ,  web - accessible data sets search results  explored coordinated interaction .
+initial appli-  cation system law enforcement domain ,  currently expanding srs deployments  regional law enforcement homeland security  organizations united states . 
+long - term goal support community - wide ,  open library analytic services .
+anticipate  service - based analytic model enable tool devel-  opers rapidly deploy analysis applications  use ‘ gold standard’ algorithms having  © 2009 palgrave macmillan 1473 - 8716 information visualization vol .
+8 , 1 , 71 – 84  83  downloaded  ivi.sagepub.com 
+guest 22 , 2011  pike et al  - implement algorithms .
+ultimately , interoper-  able service library bring visual analytics  mashup capability web applications ,  geographic mapping , successful . 
+acknowledgements  work supported national visualization  analytics center ( nvac ) , department homeland  security program operated pacific northwest national  laboratory . 
+: 2007 ieee symposium visual analytics science  technology ( vast ) ; sacramento , .
+los alamitos , : ieee  computer society , pp .
+131–138 . 
+10 johnston , r.  ( 2003 ) developing taxonomy  analysis variables .
+studies intelligence 47(3 ) : 61–71 .  intelligence  11 sanfilippo , a. , baddeley , b. , posse , c. whitney , p.
+( 2007 ) 
+layered dempster – shafer approach scenario construction  analysis .
+: 2007 ieee conference intelligence  security informatics 2007 ; new brunswick , nj .
+berlin :
+springer ,  pp .
+95–102 . 
+12 eick , s. , eick , m. , fugitt , j. , horst , b. , khailo , m. lankenau , r.  ( 2007 ) thin client visualization .
+: 2007 ieee symposium  visual analytics science technology ( vast ) ; sacramento , . 
+los alamitos , : ieee compute society , pp .
+51–58 .  references  1 viegas , f. , wattenberg , m. , van ham , f. , kriss , j. mckeon , m. 
+( 2007 )
+manyeyes :
+site visualization internet scale . 
+ieee transactions visualization computer graphics 13(6 ) :  1121–1128 . 
+2 chittaro , l. ( 2006 ) visualizing information mobile devices . 
+computer 39(3 ) :
+40–45 . 
+3 pattath , a. , , r. , collins , t. ebert , d. (
+2008 ) real- 
+time scalable visual analysis mobile devices .
+: conference  multimedia mobile devices , 20th annual  is&t / spie  symposium electronic imaging ; san jose , .
+bellingham ,  wa : spie . 
+4 patterson , e. , roth , e. woods , d.  ( 2001 ) predicting  vulnerabilities computer - supported inferential analysis  data overload .
+cognition , technology , work 3 : 224–237 .  5 hetzler , b. , crow , v. , payne , d. turner , a. (
+2005 ) turning  bucket text pipe .
+: ieee symposium information  visualization ( infovis 05 ) ; minneapolis .
+los alamitos , : ieee  computer society , pp . 89–94 . 
+6 havre , s. , hetzler , e. , whitney , p. nowell , l.  ( 2002 )  themeriver : visualizing thematic changes large document  collections . 
+ieee transactions visualization computer  graphics 8(1 ) :
+9–20 . 
+7 pan , c. mitra , p.
+( 2007 )
+femarepviz : automatic extraction  geo - temporal visualization fema national situation
+updates . 
+: 2007 ieee symposium visual analytics science  technology ( vast ) ; sacramento , .
+los alamitos , : ieee  computer society , pp .
+11–18 . 
+8 hearst , m.  ( 2006 )
+clustering versus   information exploration .
+communications acm 49(4 ) :
+59–61 . 
+9 stasko , j. , goerg , c. , liu , z. singhal , k. ( 2007 ) jigsaw :  supporting investigative analysis interactive visualization . 
+faceted categories 
+13 chen , h. , zeng , d. , atabakhsh , h. , wyzga , w. schroeder , j.   ( 2003 ) coplink : managing  knowledge .
+communications acm 46(1 ) : 28–34 . 
+law enforcement data  14 jonker , d. , wright , w. , schroh , d. , proulx , p. cort , b. ( 2005
+) in- 
+formation triage trist .
+: 2005 international conference  intelligence analysis ; mclean , va : mitre , https://analysis.mitre . 
+org / proceedings / final_papers_files/22_camera_ready_paper.pdf . 
+15 wright , w. , schroh , d. , proulx , p. , skaburskis , a. cort , b. 
+( 2006 )
+sandbox analysis : concepts evaluation . 
+: proceedings sigchi conference human factors  computing systems ; montreal .
+new york : acm press ,  pp .
+801–810 . 
+16 smith , g. , czerwinski , m. , meyers , b. , robbins , d. , robertson ,  g. tan , d. ( 2006 ) facetmap : scalable search browse  visualization .
+ieee transactions visualization computer  graphics 12(5 ) :
+797–804 . 
+17 rogowitz , b. treinish , l. ( 1993 ) architecture rule - based  visualization ; : ieee conference visualization ; san jose , . 
+los alamitos , : ieee computer society , pp .
+236–243 . 
+18 trapp ,  j. pagendarm , h .- g
+.  ( 1997 ) prototype  www - based visualization service . 
+ eighth eurographics workshop visualization scientific  computing ; wien boulogne - sur - mer , france .
+newyork : springer . 
+pp .
+21–30 . 
+: proceedings  19 mancini , c. shum ,
+s. j. b. ( 2006 ) modelling discourse  contested domains : semiotic cognitive framework . 
+64(11 ) : 
+international  1154–1171 . 
+journal human - computer  studies  20 buckingham shum , s. , uren , v. , li , g. , domingue ,  j.  motta , e. ( 2003 ) visualizing internetworked argumentation .
+:  p. kirschner , s. buckingham shum c. carr ( eds . ) , visualizing  argumentation .
+london : springer - verlag , pp .
+185–204 . 
+21 dutta , m. , mahanta , a. pujari , a.
+( 2005 ) qrock : quick  version rock algorithm clustering categorical data . 
+pattern recognition letters 26(15 ) : 2364–2373 . 
+84 
+© 2009 palgrave macmillan 1473 - 8716 information visualization vol .
+8 , 1 , 71 – 84  downloaded 
+ivi.sagepub.com  guest 22 , 2011 

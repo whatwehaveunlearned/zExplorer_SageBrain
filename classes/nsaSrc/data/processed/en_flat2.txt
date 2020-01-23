@@ -1,0 +1,704 @@
+ discussions ,  stats ,   author  profiles    publication  :  https://www.researchgate.net/publication/6451414  value   relation  display :  interactive  visual  exploration   large  data  sets   hundreds   dimensions  article   ieee  transactions   visualization   computer  graphics  ·   2007  doi : 
+10.1109/tvcg.2007.1010  ·  source :  pubmed  citations  37  5  authors ,  including :  reads  78  matthew  ward  worcester  polytechnic  institute  133  publications  3,082  citations  elke 
+rundensteiner  worcester  polytechnic  institute  567  publications  7,531  citations   profile   profile   content  following   page   uploaded   matthew  ward   12  march  2014 . 
+ user   requested  enhancement    downloaded  file . 
+value relation display : interactive visual  exploration large datasets hundreds  dimensions  1  jing yang  dept computer science  unc charlotte  jyang13@uncc.edu  daniel hubball  dept computer science  university wales swansea  csdan@swansea.ac.uk  matthew ward  dept computer science  worcester polytechnic institute  matt@cs.wpi.edu  elke rundensteiner  dept computer science  worcester polytechnic institute  rundenst@cs.wpi.edu  william ribarsky  dept computer science  unc charlotte  ribarsky@uncc.edu  abstract— existing visualization systems handle large  datasets hundreds dimensions , high dimensional  datasets cause clutter display large response time  interactive exploration .
+paper , present signiﬁcantly  improved multi - dimensional visualization approach named value  relation ( var ) display allows users effectively  efﬁciently explore large datasets dimen-  sions .
+var display , data values dimension relationships  explicitly visualized display dimension  glyphs explicitly represent values dimensions glyph  layout explicitly convey dimension relationships .
+particular ,  pixel - oriented techniques density - based scatterplots  create dimension glyphs convey values .
+multi - dimensional  scaling , jigsaw map hierarchy visualization techniques ,  animation metaphor named rainfall convey  relationships dimensions .
+rich set interaction tools  provided allow users interactively detect patterns  interest var display .
+prototype var display  fully implemented .
+case studies presented  paper prototype supports interactive exploration  datasets dimensions .
+user study evaluating  prototype reported paper . 
+index terms— multi - dimensional visualization , high dimen-  sional datasets , visual analytics . 
+datasets information visualization ﬁeld .
+include :  ( cid:129 ) condensed displays provide information  possible users .
+typical approaches include pixel-  oriented techniques [ 12 ] , [ 13 ] density - based displays  [ 9 ] , [ 24 ] .
+example , pixel - oriented techniques , infor-  mation condensed pixel presents single  data value . 
+( cid:129 ) examining relationships dimensions discover  lower dimensional spaces signiﬁcant features .
+ex- 
+ample approaches include ranking low dimensional pro-  jections features linear relationships [ 19 ] ,  placing dimensions layout revealing rela-  tionships help users construct meaningful subspaces  [ 28 ] . 
+( cid:129 ) providing rich set interactions allow users  explore datasets multiple coordinated views .
+ views , different subsets dimensions and/or data  items examined different levels detail us-  ing different visualization techniques .
+examples  approaches include hierarchical parallel coordinates  [ 10 ] vis-5d system [ 11 ] . 
+i.
+introduction 
+large datasets hundreds dimensions common  applications image analysis , ﬁnance , bioinformatics  anti - terrorism . example , order detect semantic  contents large image collections , common analyze  hundreds low level visual attributes images .
+ challenge decisions based datasets ,  hard analyze dimensionality curse [ 5 ] , 
+i.e. , lack data separation high dimensional space . 
+multi - dimensional visualization techniques present  data analysts allowing interactively explore  understand datasets important approach  addressing challenge .
+, traditional multi-  dimensional visualization techniques suffer visual clutter  scale tens dimensions .
+, multi-  dimensional visualization systems claimed scalable  datasets hundreds dimensions .
+paper ,  present system , called value relation ( var )  display , improved version technique reported  earlier paper [ 27 ] . 
+work based multiple concepts proposed  explored prior efforts visual exploration large  concepts signiﬁcant features var  display initial version [ 27 ] .
+ﬁrst version (  ﬁgures 1a b ) , pixel - oriented displays  data values group dimension glyphs representing  individual dimensions .
+dimension glyphs
+po- 
+sitioned screen fast multi - dimensional scaling  ( mds ) algorithm [ 4 ] according dimension correlations  reveal inter - relationships ( dimension correlation  typical measure dimension relationships ,  relationship measures ) .
+rich set  interactions provided facilitate navigation  display generate lower dimensional spaces interest .
+ differentiate ﬁrst version improved version ,  pixel mds var display . 
+improved version var presented paper ,  features signiﬁcantly strengthened .
+density - based  scatterplot [ 9 ] , [ 24 ] added system alter-  nate approach generating dimension glyphs .
+jigsaw map  layout [ 23 ] rainfall metaphor added  system alternate dimension glyph layout approaches .
+ new version supports broader range interaction tools  original version , including new data item selection  2  fig .
+1 . 
+( ) illustration var display .
+left spreadsheet 4-dimensional dataset column representing dimension .
+ matrix records pair - wise relationships ( correlations ) dimensions .
+middle glyph fourth dimension . 
+right var display dataset .
+( b ) pixel mds var display image-89 dataset ( 89 dimensions , 10,417 data itmes ) .
+( c ) x - ray  scatterplot mds var display dataset . 
+highlighting tool .
+labeling issue , ignored  initial version , addressed version .
+case study  included paper involving visual analysis dataset  838 dimensions .
+user study comparing var display  rank - - feature framework [ 19 ] , [ 20 ] reported . 
+paper organized follows .
+section ii reviews  related work .
+section iii brieﬂy introduces original pixel  mds var display .
+section
+iv presents approach us-  ing density - based scatterplots generate dimension glyphs . 
+section v describes new jigsaw rainfall dimension  glyph layout strategies .
+section vi summarizes correlation  calculation algorithm var display .
+section vii  presents interaction tools .
+section viii addresses  labeling issue .
+section ix describes implementation  var display addresses scalability issue.section
+x  discusses visual exploration approaches var display . 
+section xi presents case study section xii presents  user study var display .
+section xiii presents  conclusions future work . 
+ii .
+related work  techniques exist generating condensed displays  large datasets .
+work related work pixel-  oriented techniques scatterplots .
+pixel - oriented visualiza-  tion techniques [ 12 ] , [ 13 ] family multi - dimensional  display techniques map data value pixel  screen arrange pixels subwindows convey  relationships .
+patterns subwindows reveal  clusters , trends , anomalies .
+pixel - oriented techniques  options create dimension glyph  var display . 
+scatterplots visualize 2-d datasets 2-d projections  multi - dimensional datasets .
+scatterplot , hori-  zontal axis vertical axis , associated  dimensions ( x y ) .
+data items plotted  display according coordinates
+x y. scatterplots  widely provide rich information  relationship dimensions , strength , shape  ( line , curve , etc ) , direction ( positive negative ) , presence  outliers [ 18 ] .
+density - based scatterplots [ 24 ] , [ 9 ] scale  large datasets intensity spot scatterplot  indicate data density spot .
+use density-  based scatterplot option generating dimension  glyph treat areas data items scatterplot  different way existing approaches possible  overlaps scatterplots . 
+scatterplots multi - dimensional datasets orga-  nized multiple 2d projections datasets . 
+scatterplot matrices [ 7 ] organize scatterplots
+n
+x ( n-  1)/2 2-d projections n - dimensional dataset matrix . 
+scatterplot matrices easily cluttered number  dimensions increases . displaying 2d projec-  tions , display n scatterplots dimensions  focus dimension position manner conveying  dimension relationships density - based scatterplot var  option . 
+exist multiple visualization approaches examining  relationships dimensions discover lower dimen-  sional spaces signiﬁcant features .
+rank - - feature  framework [ 19 ] ranks 1d 2d axis - parallel projections  multi - dimensional datasets statistical analysis help  users detect 1d 2d projections desired features  linearly related dimensions .
+[ 16 ] visualizes correlations  pair dimensions matrix allows users  interactively select dimensions matrix con-  struct lower dimensional spaces .
+interactive hierarchical  dimension reduction approach [ 28 ] visually conveys dimension  relationships dimension hierarchy facilitate lower  dimensional space construction .
+var display different  approaches integrates data value visual-  ization dimension relationship visualization  display use screen space efﬁciently . 
+multi - dimensional scaling ( mds ) [ 4 ] , [ 15 ] itera-  tive non - linear optimization algorithm projecting multi-  dimensional data reduced number dimensions . 
+convey relationships data items  multi - dimensional dataset .
+example , - spire [ 25 ]  uses mds map data items document dataset  2d space .
+generates galaxies display spatial  representation relationships document collection . 
+approach , mds different way ,  convey relationships dimensions data items . 
+jigsaw map [ 23 ] recent space ﬁlling hierarchy  layout method .
+placing leaf nodes hierarchy  1d layout depth ﬁrst traversal mapping  1d layout  rectangular 2d mesh space - ﬁlling  curves , method creates hierarchy displays nicely shaped  regions , good continuity stability .
+leaf nodes  size , jigsaw map draw leaf nodes  distortion shape , , equal - sized  squares .
+property jigsaw map makes perfect  option lay dimensions organized hierarchy  2d mesh , dimension drawn square glyph . 
+similarity based dimension arrangement proposed  [ 1 ] addressed problem arranging pixel oriented  subwindows ( dimensions ) 2d mesh .
+aimed place  similar dimensions close 2d mesh .
+ jigsaw map dimension layout different aims  use dimension layout convey hierarchical structure  dimensions .
+consequence , similar  dimensions outlier dimensions revealed . 
+[ 29 ] presents multi - dimensional visualization technique  called dust & magnet .
+represents dimensions magnets  data items dust particles attracts dust particles  magnets reveal data item values dimensions .
+ rainfall metaphor proposed paper inspired dust  & magnet .
+difference rainfall metaphor attracts  dimensions dimensions , dust & magnet attracts  data items dimensions . 
+iii .
+pixel mds var display  figure 1a illustrates approach generating pixel  mds var display .
+, dimension glyph , called glyph  short , generated represent data values dimension ,  i.e. , values column spreadsheet ,  pixel oriented techniques [ 13 ] .
+particular , value  represented pixel color indicates high low  value , pixels representing values dimension  grouped form glyph .
+glyph , pixel  occupies unique position overlap .
+original  version , spiral pixel layout .
+rows spreadsheet  ordered according values dimension ( note :  actually 1d order ) .
+data values  column positioned spiral according order .
+ glyphs , pixels representing values row occupy  position glyphs associated  . 
+second , correlations dimensions cal-  culated recorded n x n matrix ( n  dimensionality dataset ) .
+order calculate  correlations , different approaches according  3  different purposes .
+example , users interested  linearly related dimensions , pearson ’s correlation
+coefﬁ-  cient capture linear relationships  dimensions .
+proposed scalable ﬂexible correlation  calculation algorithm [ 27 ] applied var display . 
+brieﬂy introduce section vi purpose  completeness . 
+, n x n relationship matrix generate n  positions 2-d space , position dimension .
+ proximity positions reﬂects relationships  dimensions , i.e. , closely related dimensions spatially  close , unrelated dimensions positioned  far way .
+particular , multi - dimensional  scaling algorithm [ 4 ] create 2-d positions  relationship matrix . 
+finally , dimension glyphs placed 2-d space  corresponding positions form var display . 
+figure 1b shows example var display .
+shows  image-89 dataset 89 dimensions 10,417 data items . 
+real dataset containing 88 low level visual attributes  classiﬁcation information 10,417 image segments  generated image analysis approach [ 8 ] .
+ﬁgure ,  block dimension glyph 89 glyphs . 
+glyph , data values dimension mapped  colors pixels , pixels ordered spiral manner .
+ closeness glyph positions reveals correlations  dimensions calculated underlying algorithm .
+ example , clusters closely correlated dimensions  dimensions distinct dimensions  detected glyph positions figure 1b . 
+approach summarized dimension glyph  generation layout .
+glyphs explicitly convey data values  layout explicitly conveys dimension relationships . 
+, dimension relationships revealed  patterns glyphs .
+similarity glyph patterns in-  dicates dimension relationships , linear  non - linear relationship , partially correlated (  dimensions subset data items closely  related ) .
+humans good pattern recognition ,  patterns glyphs provide straightforward intuitive  comparison dimensions .
+hand , layout  approach brings related dimensions close  pattern comparison easier .
+hand , patterns  allow users conﬁrm refute relationships suggested  layout eyes , reveal dimensions  related detail . 
+techniques original var display ,  approaches creating glyphs laying  , introduced following sections .
+ glyph generation layout independent ,  combined freely form var displays . 
+iv .
+dimension glyph alternative : x - ray  scatterplots  glyph generation approach original var  display approach creating dimension glyphs . 
+example , different layouts pixels glyph  reveal different patterns .
+example , organizing pixels  calendar pattern according time stamps  data items reveal time - dependant patterns data  items .
+techniques widely studied  pixel - oriented techniques [ 12 ] integrated  var display easily replacing original pixel-  oriented dimension glyph generation approach ,  discussed paper .
+instead , present work  customizing density - based scatterplot glyph ( called  x - ray glyph ) generation approach .
+approach  introduced improved version ( figure 1c  example var display scatterplot approach ) . 
+var display , scatterplot  generated  dimension .
+y dimension scatterplot dimension glyph  dimension represents , glyphs  x dimension .
+choose use x dimension  hard users associate different dimension  glyphs
+x y dimensions change glyph  .
+causes information loss , users  interactively change x dimension guided  semi - automatic selection tool ( section vii ) visual  exploration ( section xi ) . 
+var display targeted large datasets .
+time  consuming draw projection data item  n scatterplots .
+, large number projections  clutter glyph .
+order avoid clutter increase  scalability , store glyph m x m pixel matrix ,  m adjustable integer , divide 2d space  value range dataset m x m equal-  size bins .
+number projections falling bin  recorded translated color corresponding  pixel pixel matrix .
+particular , intensity pixel  proportional data density area represents . 
+fig .
+2 .
+x - ray scatterplots ( ) ﬁrst solution ( b ) second solution ( c )  x - ray scatterplot solution . 
+ﬁrst image ( figure 2a )
+generated disappointing ,  hard differentiate unoccupied area ( areas  zero data items ) areas data items .
+order  solve problem , assign different hue pixels  representing unoccupied areas .
+image generated ( figure  2b ) , data items blue area .
+observed  ,  glyphs generated pixel - oriented  techniques pixel represents data value ,  large contiguous unoccupied areas scatterplot  glyph ,
+especially
+x y dimensions closely  related .
+recalling glyph layout approaches ,  contrast  4  mds , cause overlaps different glyphs ,  unoccupied areas semi - transparent users  hidden glyphs unoccupied areas hiding  glyphs .
+figure 2c shows ﬁnal solution .
+ﬁgure  glyphs look like x - ray photos , named  var display x - ray scatterplot var display .
+ users ﬂexibility , allow interactively choose  color transparency unoccupied areas .
+users  dislike semi - transparent unoccupied areas , able  set opaque . 
+v. dimension layout alternatives : jigsaw map  layout rainfall  a. jigsaw map glyph layout  mds approach effective conveying dimension  relationships .
+, mds approach , positions  glyphs close  closely related .
+glyphs overlap case ,  undesired users .
+allowing users  reduce overlaps mds layout interactions (  section vii ) , propose jigsaw map dimension layout  based recently proposed jigsaw map [ 23 ] .
+ approach , dimensions grouped dimension hierarchy . 
+jigsaw map , space - ﬁlling hierarchy visualiza-  tion method , lay dimensions grid . 
+approach prevents glyphs overlapping ,  conveys hierarchical structure dimensions . 
+figure 3 shows var displays jigsaw layout . 
+motivation approach grouping dimensions  high dimensional datasets dimension hierarchies makes  easy capture relationships dimensions . 
+dimension hierarchy , dimensions organized  hierarchy clusters .
+dimensions cluster closer  relationships dimensions outside  cluster .
+clusters different levels hierarchy divide  dimensions groups different granularity .
+ dimension relationship matrix , convenient generate  dimension hierarchy existing hierarchical clustering  approaches .
+hierarchy , leaf node dimension  high dimensional dataset . 
+order turn dimension hierarchy dimension  layout , examined existing hierarchy visualization tech-  niques .
+basic requirements 1 ) layout  space efﬁcient target high dimensional datasets  2 ) dimension assigned space  size , shape orientation difﬁcult users  compare associate glyphs different sizes , shapes ,  orientations .
+node - linked diagrams use space  efﬁciently , considered space - ﬁlling hierarchy  visualization techniques [ 3 ] , [ 21 ] , [ 23 ] .
+,  jigsaw map [ 23 ] quantum treemaps [ 3 ] capable  techniques assign areas different shapes  orientations leaf nodes .
+chose jigsaw map  generates layouts nicely shaped regions stable  regards changing tree structures leaf nodes [ 23 ] . 
+generate jigsaw map layout , ﬁrst hierarchically 
+cluster n dimensions dataset based pair-  wise distances ( pair closely related dimensions  5  fig .
+3 .
+image-838 dataset ( 838 dimensions , 11,413 data items ) .
+( ) pixel jigsaw map var display separated dimensions selected labeled  ( b ) x - ray scatterplot jigsaw map var display dimension coarseness x dimension .
+x dimension pink frame labeled .
+( c )  x - ray scatterplot jigsaw map var display dimension angle 135 x dimension .
+x dimension left corner map  dimensions closely related red frames .
+( d ) zoomed display selected dimensions labels shown . 
+smaller distance pair related dimensions )  minimum single linkage metrics [ 17 ] .
+, n  dimensions ordered 1-d sequence according  positions hierarchy depth - ﬁrst traversal  hierarchy , sequence mapped 2-d l x k (  l x k > = n ) mesh applying space - ﬁlling curve called  h curve ( refer [ 23 ] details ) .
+figure 3a  shows example jigsaw layout .
+ﬁgure , similar  dimensions close signiﬁcant boundaries  groups closely related dimensions , group  dimensions left map , detected . 
+outlier dimensions , dimensions left  map , distinguishable textures look  different neighbors . 
+b. rainfall metaphor  exploring high dimensional dataset
+, users  interested relationships single dimension  interest dimensions .
+x - ray scatter-  plot , reveals relationships glyph textures ,  6  fig .
+4 .
+rainfall metaphor .
+( ) beginning rain .
+dimensions closely related dimension interest falling  faster acceleration related dimensions .
+( b ) rain continues .
+dimensions different correlations dimension interest separated . 
+seen roughly levels association dimension interest dimensions .
+( c ) rain close end . 
+dimensions signiﬁcantly distinct dimension interest revealed .
+dataset image-89 dataset .
+glyphs pixel - oriented glyphs ( pixels  ordered line line ( horizontal lines ) manner . 
+provide simple animation approach dynamically illustrate  relationships changing glyph positions .
+approach  named rainfall metaphor imitates rain ( figure  4 example ) . 
+beginning animation , dimension interest  placed center display ( ground )  dimensions ( raindrops ) placed  display ( sky ) .
+horizontal positions raindrops  randomly generated .
+rain starts , raindrop falls  ground acceleration proportional  correlation dimension interest .
+, raindrop  moves ground faster raindrop  closer relationship dimension interest .
+raindrop  stops movement hits ground .
+timer  starts beginning rain ends  raindrops hit ground .
+users interactively play  animation moving slider representing timer .
+users  interactively select dimension interest  animation . 
+figure 4a - c shows screen captures rainfall  layout .
+metaphor , users focus relation-  ships dimension interest dimensions ,  distracted relationships  dimensions .
+different moments rain , similar  dimensions distinct dimensions dimension  ground attract users’ attention . 
+vi .
+correlation calculation  var display , binning based correlation calculation  algorithm .
+brieﬂy introduce  presented detail [ 27 ] .
+claim  relationship calculation algorithm var  display long scales large datasets .
+layout  glyphs reﬂects type relationship calculated  underlying algorithm . 
+algorithm , distribution value differences ( be-  tween different dimensions data item )  recorded bins .
+particular , possible range value  differences pair dimensions divided  sequence bins .
+number data items value  differences dimensions fall bins  recorded .
+n dimensional dataset , n x ( n-1)/2 sequences  bins ( sequence pair dimensions ) created . 
+pair dimensions considered closely related  large number data items fall info small number  bins ( k ) sequence .
+given k , correlations  calculated way : sort bins sequence  according populations , sum populations  k bins highest populations .
+sum divided  total population data items proportional  correlation dimensions .
+k selected  number bins global variance correlations  dimensions maximum .
+algorithm scales large  number data items .
+ﬁrst scan ,  minimal cost inserting dataset  database , efﬁciency related number  dimensions . 
+algorithm heuristic approach purpose  maximize visibility structure mds  jigsaw layout .
+optimization problems  var display , selecting dimension ordering  pixel - oriented display initial view provide  maximum information users ﬁrst glance .
+detailed  discussion problems presented [ 27 ]  repeated . 
+vii .
+interactive tools var display  rich set interaction tools developed  var display .
+navigation tools help users reduce clutter  display discover information dataset .
+automatic  manual dimension selection tools allow users perform  human - driven dimension reduction selecting subsets  dimensions exploration var display  multi - dimensional visualizations .
+data item selection  tools allow users select subsets data items  exploration .
+addition , data item masking tool allows  users examine details selected data items  context unselected data items . 
+interactive tools special assumption  glyph positioning generation strategies , i.e. ,  applied realization var display .
+ tools called general tools . speciﬁcally noted , in-  teraction tool general tool following sections ,  details navigation selection tool presented . 
+a. tools glyph layout  mds dimension layout causes overlaps  glyphs .
+overlaps emphasize close relationships  dimensions glyphs overlap dimensions  closely related .
+, overlaps prevent user  seeing details overlapped glyph .
+provide  following operations overcome problem
+( [ 27 ]  detail ) . 
+( cid:129 ) showing names : putting cursor var  display , dimension names glyphs  cursor position shown message bar .
+user  aware existence glyphs hidden  glyphs . 
+( cid:129 ) layer reordering : mouse click , user force  glyph displayed .
+ way / view details glyph originally  overlapped .
+users randomly change ordering  dimension glyphs clicking button control  frame .
+addition , selected dimensions automatically  brought display . 
+( cid:129 ) manual relocation : holding control key , user  drag drop glyph position /  likes .
+way user separate overlapping glyphs . 
+( cid:129 ) extent scaling :
+extent scaling allows user interac-  tively decrease sizes glyphs proportionally  reduce overlaps , increase larger glyphs . 
+( cid:129 ) dynamic masking :
+dynamic masking allows users  hide glyphs unselected dimensions var  display . 
+( cid:129 ) automatic shifting : operation
+automatically re- 
+duces overlaps glyphs slightly shift-  ing positions glyphs .
+ advanced overlap reducing algorithms ,  listed [ 22 ] . 
+( cid:129 ) distortion :
+users interactively enlarge size  glyphs keeping size glyphs  ﬁxed .
+way users allowed examine details  patterns enlarged glyphs context  provided glyphs . 
+( cid:129 ) zooming panning : users zoom , zoom  pan var display .
+example , order reduce  overlaps , size glyphs set  small large number dimensions . 
+7  zooming display enlarge glyphs  user clear view patterns  glyphs . 
+( cid:129 ) reﬁning : reﬁned var display generated  selected subset dimensions selected subset  data items .
+selected dimensions data items  treated new dataset .
+relationship calculation ,  glyph generation positioning applied new  dataset . 
+b. tools glyph regeneration  pixel - oriented dimension glyphs , dimension  sort data items affects glyph patterns signiﬁcantly . 
+clusters subspaces including dimension easily  detected clusters subspaces .
+similarly ,  x - ray scatterplot dimension glyphs , relationships  dimensions x dimension easier detect  relationships dimensions .
+allow users  interactively select sorting dimension pixel - oriented  mode x dimension x - ray scatterplot mode  clicking mouse button glyph desired  dimension selecting combo - box . 
+addition , comparing mode pixel-  oriented glyphs order compare dimensions  dimension interest .
+mode , glyph  base dimension , pixels glyphs colored  according differences values base  dimension dimensions .
+ﬁgure comparing  mode found [ 27 ] . 
+c. dimension selection tools  dimension selection tools enable users select dimen-  sions interest exploration multi-  dimensional visualization techniques .
+ ﬁlter reduce number glyphs displayed var  display , allow users hide glyphs unselected  dimensions dynamic masking ( section vii - ) .
+ selection tools provide users include automatic selec-  tion tools closely related dimensions separated  dimensions , addition manual selection . 
+automatic selection tool related dimensions  takes user - assigned dimension correlation threshold  input .
+assume pair closely related  dimensions larger correlation measure pair  related dimensions .
+users pick assigned dimension  clicking glyph adjust threshold slider .
+ tool automatically selects dimensions correlation  measures input dimension larger threshold  traversing dimension relationship matrix .
+tool  enables users select set closely related dimensions . 
+automatic selection tool separated dimensions  takes user - assigned dimension correlation threshold  input returns set dimensions describe  major features dataset .
+assigned dimension  included returned set dimensions .
+ pair dimensions result set , correlation measure  smaller threshold .
+dimension  8  fig .
+5 .
+masking unselected data items .
+unselected data items covered mask adjustable color transparency .
+( ) mask fully  transparent mask .
+( b ) opaque mask .
+( b ) semi - transparent mask .
+dataset image-89 dataset .
+glyphs pixel - oriented glyphs ( pixels ordered  line line ( vertical lines ) manner . 
+result set , dimension result set  correlation measure larger threshold . 
+tool , user able select set dimensions  construct lower dimensional subspace revealing major  features dataset redundancy .
+figure 1b  separated dimensions selected automatically labeled . 
+following algorithm automatic selection  separated dimensions :  1 ) assigned dimension selection threshold . 
+2 ) set assigned dimension “ selected ”  dimensions “ unselected ” .  3 ) find unselected dimensions correlation mea-  sures existing selected dimensions smaller  threshold .
+mark “ candidates
+” . 
+4 ) candidate dimension , step 5 .
+, set  candidate dimension “ selected ”  candidates “ unselected ” .
+step 3 . 
+5 ) return dimensions marked “
+selected ” . 
+interesting deﬁned pick dimen-  sion candidate dimensions step 4 .
+ customized according task interest .
+example ,  section viii , approach customized reduce  clutter labels selected dimensions good  labeling result .
+present customization . 
+users start explore unknown dataset ,  desired ﬁnd dimension groups containing large numbers  closely related dimensions .
+heuristic approach  step 4 : setting threshold , candidate dimen-  sion counting number dimensions having correlation  measures larger threshold , selecting  dimension highest count .
+approach  dimensions larger number closely related dimensions  higher priority selected . 
+manual selection allows user manually select dimen-  sion clicking corresponding glyph .
+user unselect  dimension clicking glyph .
+combination  manual automatic selection makes selection operation  ﬂexible easy use . 
+d. data item selection masking tools  allowing user select data items directly  glyphs var display ( hard glyphs  small ) , allow user select data items  dialog .
+firstly , user selects dimension  list dialog .
+brief summary dimensions  provided help user set selection criteria  selected dimension .
+dimension categorical  dimension , distinct values dimension  number data items value provided .
+user  select desired distinct values .
+dimension  numeric dimension , histogram dimension  provided .
+user set minimum value maximum  value selection sliders .
+user set  selection ranges multiple dimensions . 
+user sets selection criteria , / click  button dialog trigger selection .
+problem  highlight selected data items .
+visualization  systems , selected data items highlighted  special color , surrounding box selected items . 
+, var display pixel - oriented techniques ,  color represent values , hard  surrounding box condensed glyph , especially  selected data items adjacent  glyphs . 
+straightforward solution problem display  selected data items .
+general solution suitable  realizations var display .
+, drawback  approach context provided unselected data  items lost .
+context useful .
+example ,  users want compare selected data items  unselected data items dimensions . 
+order overcome drawback , developed  approach called data item masking .
+approach  useful var displays pixel - oriented techniques .
+ 9  fig .
+6 . labeling solutions ( ) dimensions labeled names ( b ) dimensions selected labeling algorithm labeled .
+clutter reduced .
+( c )  angled text
+label dimensions jigsaw map layout .
+dataset image-89 dataset . 
+according following heuristic criteria : 1 )  distinct dimensions , i.e. , similar dimensions  labeled time .
+dimensions distinct  labeled dimensions labeled .
+2 ) .
+ separated possible avoid clutter  screen .
+addition , allow users interactively  change number dimensions labeled cluttered  view labels . 
+criterion 1 exactly criterion automatic se- 
+lection separated dimensions ( section vii - c ) .
+criterion  2 adds constraints selection .
+recall  freedom step 4 selection algorithm , i.e. ,  dimensions candidate dimension set selected ;  modiﬁed algorithm labeling follows :  1 ) assign dimension selection threshold . 
+2 ) set assigned dimension “ selected ”  dimensions “ unselected ” .  3 ) find unselected dimensions correlations  existing selected dimensions smaller  threshold .
+mark “ candidates
+” . 
+4 ) candidate dimension , step 5 .
+, set  candidate dimension far way  screen closest existing selected dimension  “ selected ” candidates “ unselected ” .
+ step 3 . 
+5 ) return dimensions marked “ selected ” label  approach ,
+selected unselected data items  drawn screen .
+unselected data items covered  mask .
+users interactively change color mask ,  adjust transparency mask slider .
+ mask opaque , shown figure 5b , unselected data  items hidden .
+mask fully transparent , shown  figure 5a , selected data items highlighted .
+ mask semi - transparent , figure 5c , selected  data items highlighted context provided  unselected data items .
+users interactively change  transparency mask adjust strength context . 
+implementation masking operation simple . 
+, mask generated approach similar  generation normal dimension glyph .
+difference  pixels set transparent selected data  items user assigned color transparency  unselected data items .
+mask generation mechanism  dependency order data items ,   necessary selected data items adjacent  glyphs .
+color shape  masks  mask  generated , stored texture object , pasted  glyphs .
+texture mapping operation  efﬁcient opengl , displaying masks minimal effect  rendering var display . 
+glyphs ,  i.e. ,   viii .
+labeling  . 
+original version var display , dimension names  labeled horizontally middle region  dimension glyph dimensions shown screen (  figure 6a ) .
+labels clutter screen seriously high  dimensional dataset , provide labeling  option users .
+, users moved cursor  glyph , glyph showed message bar  display .
+, users complained ﬁnding dimension  names way tiring .
+argued var display  dimension labels meaningful  names labeled .
+order solve problem , chose  label subset dimensions screen mds layout  ( figure 6b ) .
+dimensions labeled selected  calculating screen distance dimen-  sions step 4 , consider fact horizontal labels  .
+lengths larger widths . 
+assume labels 5 characters average  characters equal height width , screen distance  dimensions d1 d2 d(d1 , d2 ) =
+fabs((d1.x 
+- d1.x ) )
++ 5 * fabs((d1.y - d2.y ) ) , x y  screen coordinates dimensions .
+equation means  prefer dimensions separated vertical direction  horizontal direction .
+figure 6b shows display  figure 6a selected dimensions labeled  algorithm . 
+labeling approach applied jigsaw  map layout .
+addition , glyphs placed regular  mesh jigsaw map , applying angle labels  greatly reduces clutter screen labels  shown .
+figure6c shows image-89 datasets jigsaw  map layout dimension names displayed 20 degree  angle .
+dimension names distinguished  display . 
+prototype bind labeling selections ,  i.e. ,  users option labels selected dimensions  .
+user chooses option uses automatic  selection tool separated dimensions , exactly  clutter - reducing labeling approach .
+user uses  selection tool related dimensions , dimensions closely  related user - assigned dimensions labeled ( figure 
+3d example ) . 
+ix .
+implementation scalability issue  dimensions , datasets  easily contain millions data values  contain thousands data items .
+datasets higher  number data items .
+large datasets cause large  response time interactions problems storing  data structures visualization system , cause clutter  display .
+scalability critical issue visualization  systems aimed high dimensional datasets . 
+implemented fully working prototype var  display .
+biggest dataset successfully loaded  var display far image classiﬁcation dataset  containing 838 dimensions 11413 data items , means  9 million data values ( figure 3 var display ) . 
+interactions processed seconds  typical pc dataset .
+dataset biggest dataset  currently .
+future , test larger datasets  prototype . 
+critical techniques prototype increas- 
+ing scalability texture mapping , binning , sampling  techniques .
+texture mapping techniques provided  opengl , prototype stores dimension glyphs ( including  mask masking operation ) texture objects  pastes screen needed .
+long glyph  textures change ,  dataset need  rescanned , time consuming large datasets .
+ keeping texture objects small ( hundreds pixels ) ,  reasonable dimension glyph  big screen order reduce clutter , system  draw hundreds dimension glyph textures screen  real time .
+approach greatly reduces response  time interactions , reordering  pixel - oriented glyphs resetting x dimension x - ray  scatterplot glyphs , interactions change  glyph textures .
+, refresh , resize , reposition ,  reorder glyphs . 
+according experience , drawing fonts opengl  time consuming task .
+prototype stores dimension  labels texture objects .
+texture labels created  time , quickly pasted screen users  change contents colors labels .
+texture labels  scaled rotated easily screen . 
+10 
+binning , i.e. , buckets stored statistic information  groups values recording individually ,  approach widely data mining techniques large  datasets .
+use binning techniques increase speed  correlation calculation algorithm ( section vi )  x - ray scatterplot glyph generation ( section iv ) . 
+prototype stores datasets oracle database server . 
+dynamically requests data server needed ,  making use sorting query functions provided  database server .
+generating var display  dataset containing large number data items , use  random sampling approach reduce response time  fetching data items server , number  values processed .
+particular , system keeps  default maximum number .
+number data items  contained dataset exceeds , uniform random sampling  performed dataset fetch maximum number  data items .
+users allowed interactively adjust  maximum number order trade response time  visualization accuracy . 
+random sampling easy implement .
+,  big drawback large sampling rate needed order  reduce small group loss samples [ 6 ] .
+order  overcome problem , solutions proposed ,  biased sampling [ 14 ] dynamic sample selection  [ 2 ] .
+shown literatures approaches  successfully reduce small group loss .
+explore  approaches future . 
+x. discussion  var display serve overview tool high  dimensional dataset .
+starting var display ,  visualization techniques detailed visual  analysis .
+example , var display coordinated  parallel coordinates , star glyphs , scatterplot matrix views  prototype .
+techniques handle  hundreds dimensions , work examining data  items dimensions selected var display .
+recently ,  completed interesting project coordinating var  display image exploration interface .
+var display  high dimensional image content anno-  tations .
+users allowed select images contents  var display .
+images examined detail  image exploration interface .
+work described [ 26 ] . 
+mds jigsaw map glyph layout approaches  advantages disadvantages .
+nature , mds  better capturing high dimensional relationships  hierarchical approach .
+, non - overlap feature  jigsaw map layout makes popular approach users  var display far . 
+pixel - oriented glyphs mentioned  x - ray scatterplot glyphs paper ,  usage pixel - oriented techniques widely  studied effectiveness shown papers . 
+compared scatterplots , pixel - oriented glyphs  effective pixel usage use pixel . 
+, easier compare relationship  11  fig .
+7 . 
+( ) pixel mds var display image-838 dataset separated dimensions selected labeled .
+( b)(c ) x - ray scatterplot jigsaw map  var display image-89 dataset .
+dimension yellow frame non - linearly related x dimension .
+( c ) x - ray scatterplot jigsaw map var  display x dimension ( dimension highlighted yellow frame ( b ) ) . 
+dimension interest dimensions scat-  terplot glyphs .
+users ﬁnd difﬁcult compare patterns  pixel - oriented glyphs far .  compared scatterplot matrices , x - ray scatterplot var  display
+advantages disadvantages .
+datasets  small number dimensions , scatterplot matrices  preferred possible axis - parallel 2-d projections  provided .
+, datasets tens , hundreds  thousands dimensions , x - ray scatterplot var display  preferred causes clutter .
+disadvantage  possible 2-d projections displayed  leveraged facts : ﬁrst , dimension relationships conveyed  var display strong hints shapes  undisplayed 2-d projections ; second , users interactively  access 2-d projections interest interactions . 
+compared approaches rank 1d 2-d projections  according features allow users examine detail  projection selecting diagrams lists conveying  ranking ( rank - - feature framework [ 19 ] ) ,  var display advantages disadvantages . 
+obviously tasks ﬁnding linearly corre-  lated dimensions ranking approaches better choices . 
+, var display better helping users grasp  global relationships dimensions . 
+xi .
+case study  explored real datasets var dis-  play , including image-838 dataset [ 8 ] 838 dimensions  11,413 data items image-89 dataset [ 8 ] 89  dimensions 10,471 data items .
+contain low level  visual attributes image classiﬁcation .
+image analysts  interested ﬁnding outlier dimensions uncorrelated  dimensions , dimensions representing group  correlated dimensions ( dimension cluster ) order reduce  number low level visual attributes image  classiﬁcation process . 
+datasets , selected pixel mds var display  dimensions displayed initial view ,  pixel - oriented glyphs higher pixel usage efﬁciency  mds display conveys dimension relationships  accurately jigsaw map layout .
+figure 7a figure
+1b  pixel mds var displays image-838 dataset  image-89 dataset respectively .
+ﬁgures ,  found dimension outliers clusters  datasets .
+applied automatic selections separated  dimensions .
+outlier dimensions dimensions repre- 
+senting dimension clusters selected . 
+, switched jigsaw map layout .
+figure 3a  shows pixel jigsaw map var display image-838  dataset .
+distinguishable regions  seen map adjacent glyphs regions  similar patterns .
+example , distinguishable region  composed bright blue glyphs left  map .
+dimension selected region ,  means neighbors selected dimension closely  related , selection separated dimensions . 
+dimension cluster selected dimension  represent cluster .
+selected labeled dimension  angle 135 left corner representative  dimension .
+, selected dimensions crowded ,  selected dimensions left map ,  potential outliers distinct closest  neighbors .
+selected labeled dimension coarseness  left corner suspicious outlier .  order examine dimension coarseness outlier ,  x - ray scatterplot var display created  x dimension ( figure 3b ) .
+scatterplots figure  3b seen dimensions strong  correlations dimension coarseness .
+conﬁrmed  dimension coarseness outlier dimension . 
+figure 3c examines dimension angle 135 repre-  sentative dimension .
+x dimension scatterplots  dimension angle 135 dimensions closely correlated  dimension anagle 135 selected highlighted .
+ seen large number dimensions selected  contain clear diagonal pattern indicates strong  linear correlation .
+figure 3d shows zoomed display  selected dimensions labels shown . 
+similar exploration approach conducted  image-89 dataset .
+interesting pattern dataset  found examining dimension channel energy 5  x - ray scatteplot jigsaw map var display ( figure  7b ) : glyph curved band ( glyph  yellow frame , frame manually added ﬁgure  highlighting ) .
+ dimension non-  linearly related target dimension .
+raised interest  target . 
+clicked dimension set x dimension  x - ray scatterplots got figure 7c .
+labeled  figure 7c texture brightness dc .
+figure 7c shows  dimension texture brightness dc non - linearly related  dimensions dataset .
+curved bands fairly  thin dimensions , means strong non - linear  relationships . 
+xii .
+user study  user study conducted evaluate var display  comparing rank - - feature feature hce [ 19 ] . 
+form comparable study , considered x - ray scat- 
+terplot glyph style var scatterplot prism  hce system , 2d projection ranking , selection  visualization feature .
+hce , 2d projections ranked  features strength linear relationship square  error curvilinear regression .
+ranking visualized  matrix list .
+window ranking windows  shows scatterplot 2d projection selected user . 
+assumption var display better help  users grasp global relationships dimensions  high dimensional dataset .
+reason var provides  detailed view dimensions time users  hce need efforts associate multiple dimensions  examine detailed views  time . 
+subjects participated user study .
+subjects  vary educational backgrounds : psychology grad-  uate student , computer science undergraduate stu-  dents , graduate students ﬁeld visualization ,  researchers / post - doctorates visualization .
+ subjects completed user study  computer instructor .
+subject tested  systems .
+order var hce alternated  subjects . 
+study began 10 minute training session  var hce 10 minutes allow subjects  explore tools ask instructor questions .
+set  tasks completed subjects tools .
+ post - test survey ﬁnd user preferences discussion  conducted immediately following completion tasks . 
+image-89 dataset 89 dimensions 10,471  data items .
+shown case study ( section xi ) ,  strong linearly related dimensions strong  non - linearly related dimensions image-89 dataset . 
+ﬁrst  task describe relationships  given dimension dimensions  12  scatterplot displays approximating numbers different  scatterplot shapes involved given dimension .
+samples  typical shapes , diagonal thin straight bands lin-  ear relations , curved bands non - linear relations , evenly  distributed scatterplot indicating unrelated dimensions  provided users .
+second task required users describe  relationships ﬁve randomly assigned dimensions  scatterplot shapes . 
+majority users performed ﬁrst task quicker  evaluated task easier var display .
+ average time 3.2 minutes standard deviation  0.5 minutes var , average time 4.7 minutes  standard deviation 3.2 minutes hce .
+ scale 0 ( hard ) 5 ( easy ) , mean scores 3.5 2.1  given var hce respectively .
+similar trend  identiﬁed second task : average time 3.5 minutes  standard deviation 0.4 minutes var ,  average time 8.5 minutes standard deviation  2.9 minutes hce .
+scores 3.6 var 1.0  hce .
+results tasks highlighted advantage  var display providing global view dimension  relationships . 
+qualitative results qualitative feedback post-  test survey encouraging .
+users typically preferred  var hce given tasks .
+reasons given  user generally similar summarized  ability examine details multiple relations single  display .
+user study preferred hce var  detailed visible scatterplots hce system . 
+users asked agreed statement “  tool useful exploring high dimensional data ” .
+scale  0 ( disagree ) 5 ( agree ) , users responded mean score  4.3 3.5 var hce respectively . 
+number comments suggestions  users systems .
+positive feedback var  included intuitive interface , instantaneous global view  ability quickly select x dimension scatterplots . 
+improvements suggested users involved ranking  dimensions features , color best - ﬁt - lines  enhance scatterplot displays considered  dense .
+addition , users suggested ordering dimension  glyphs according shapes scatterplot au-  tomatic image analysis techniques .
+hce system , users  preferred ranking features scatterplot display  rich features interactions .
+users suggested global  view provided prism hce lacked details compared  var display .
+future work beneﬁt combining  best features systems . 
+xiii .
+conclusion  paper , var display , allows users inter-  actively explore large datasets hundreds dimensions ,  presented .
+essential  idea var display  represent dimension high dimensional dataset  information - rich glyph , arranging glyphs  reveal relationships dimensions .
+integrating  existing techniques mds , jigsaw map , pixel - oriented  13  [ 12 ] d.a .
+keim .
+designing pixel - oriented visualization techniques : theory  ieee transactions visualization computer  applications . 
+graphics , 6(1):1–20 , january - march 2000 . 
+[ 13 ] d.a .
+keim , h .- p . kriegel , m. ankerst .
+recursive pattern :  technique visualizing large amounts data .
+proc .
+ieee  visualization ’95 , pages 279–286 , 1995 . 
+[ 14 ] g. kollios , d. gunopulos , n. koudas , s. berchtold .
+efﬁcient  biased sampling approximate clustering outlier detection large  ieee transactions knowledge data engineering ,  data sets . 
+15(5):1170–1187 , 2003 . 
+[ 15 ] j.b .
+kruskal m. wish .
+multidimensional scaling .
+sage publications ,  1978 . 
+[ 16 ] a. maceachren , x. dai , f. hardisty , d. guo , g. lengerich .
+explor- 
+ing high - d spaces multiform matrices small multiples .
+proc . 
+ieee symposium information visualization , pages 31–38 , 2003 . 
+[ 17 ] f. murtagh .
+survey recent advances hierarchical clustering  algorithms .
+computer journal , 26(4):354–359 , 1983 . 
+[ 18 ] netmba . 
+http://www.netmba.com / statistics
+/ plot / scatter/. 
+[ 19 ] j. seo b. shneiderman .
+rank - - feature framework un-  supervised multidimensional data exploration low dimensional  projections .
+proc .
+ieee symposium information visualization , pages 
+65–72 , 2004 . 
+[ 20 ]
+j. seo b. shneiderman .
+rank - - feature framework inter-  active exploration multidimensional data .
+information visualization ,  4(2):96–113 , 2005 . 
+[ 21 ] b. shneiderman .
+tree visualization tree - maps : 2d space - ﬁlling  approach .
+acm transactions graphics ,
+11(1):92–99 , jan .
+1992 . 
+[ 22 ] m.o .
+ward .
+taxonomy glyph placement strategies multidi-  mensional data visualization .
+information visualization , 1(3 - 4):194–210 ,  2002 . 
+[ 23 ] m. wattenberg .
+note space - ﬁlling visualizations space - ﬁlling  curves .
+proc .
+ieee symposium information visualization , pages 181–  186 , 2005 . 
+[ 24 ] e.j .
+wegman q. luo .
+high dimensional clustering parallel  coordinates grand tour .
+computing science statistics ,  28:361–368 , 1997 . 
+[ 25 ] j.a . wise , j.j .
+thomas , k. pennock , d. lantrip , m. pottier , a. schur ,  v. crow .
+visualizing non - visual : spatial analysis interaction  information text documents .
+proc .
+ieee symposium  information visualization , pages 51–58 , 1995 . 
+[ 26 ]
+j. yang , j. fan , d. hubball , y. gao ,
+h. luo , w. ribarsky ,  m. ward .
+semantic image browser : bridging information visualization  automated intelligent image analysis .
+proc .
+ieee symposium  visual analytics science technology , pages 191–198 , 2006 . 
+[ 27 ]
+j. yang , a.
+patro
+, s. huang , n. mehta , m. ward , e. rundensteiner . 
+value relation display interactive exploration high dimensional  datasets .
+proc .
+ieee symposium information visualization , pages  73–80 , 2004 . 
+[ 28 ] j. yang , m.o .
+ward , e.a . rundensteiner , s. huang .
+visual  hierarchical dimension reduction exploration high dimensional  datasets .
+eurographics / ieee tcvg symposium visualization , pages  19–28 , 2003 . 
+[ 29 ] j. yi ,
+r. melton , j. stasko , j. jacko .
+dust & magnet : multivariate  information visualization magnet metaphor .
+information visual-  ization , 4:239–256 , 2005 .  techniques , scatterplots , allowing users interactively  explore large datasets according interests , var  display provides rich metaphor interactive exploration  high dimensional datasets .
+case studies user study  conducted proved var display effective approach  high scalability . 
+work presented paper greatly extended  functionality original var display [ 27 ] , believe   var display potential  development .
+time - dependant dimension glyph generation  layout , ability convey spatial information , ability  visualize dynamically changing data streams , future  directions want explore var display .
+addition ,  detecting features analyzing comparing textures  dimension glyphs automatic image analysis techniques  appealing future work .
+important future  work conduct user studies evaluate different options  provided var display . 
+acknowledgment 
+gratefully thank dr .
+daniel a. keim giving  valuable suggestions work , dr .
+jianping fan , yuli gao ,  hangzai luo providing datasets , users  participated user study . 
+work performed partial support nsf  grant iis-0119276 national visualization ana-  lytics center ( nvac(tm ) ) , u.s . department homeland  security program , auspices southeastern re-  gional visualization analytics center .
+nvac operated  paciﬁc northwest national laboratory ( pnnl ) , u.s .  department energy ofﬁce science laboratory . 
+references 
+[ 1 ] m. ankerst ,
+s. berchtold , d.a . keim .
+similarity clustering  dimensions enhanced visualization multidimensional data . 
+proc .
+ieee symposium information visualization , pages 52–60 ,  1998 . 
+[ 2 ]
+b. babcock , s. chaudhuri , g. das .
+dynamic sample selection  approximate query processing .
+proc .
+acm sigmod international  conference management data , pages 539–550 , 2003 . 
+[ 3 ]
+b. bederson , b. shneiderman , m. wattenberg .
+ordered quantum  treemaps : making effective use 2d space display hierarchies .
+acm  transactions graphics , 21(4):833–854 , 2002 . 
+[ 4 ] c.l .
+bentley m.o .
+ward .
+animating multidimensional scaling  visualize n- dimensional data sets .
+proc .
+ieee symposium  information visualization , pages 72–73 , 1996 . 
+[ 5 ] k. beyer , j. goldstein , r. ramakrishnan , u. shaft .
+“ nearest  neighbor
+” meaningful ?
+lecture notes computer science , 1540:217–  235 , 1999 . 
+[ 6 ] s. chaudhuri , r. motwani , v. narasayya .
+random sampling  histogram construction : ?
+proc .
+acm sigmod  international conference management data , pages 436–447 , 1998 . 
+[ 7 ] w.s .
+cleveland m.e .
+mcgill .
+dynamic graphics statistics . 
+wadsworth , inc . , 1988 . 
+[ 8 ] j. fan , y. gao , h. luo .
+multi - level annotation natural scenes  dominant image components semantic image concepts .
+proc . 
+acm international conference multimedia , pages 540 – 547 , 2004 . 
+interactive information visualization  million items .
+proc .
+ieee symposium information visualization ,  pages 117–124 , 2002 . 
+[ 9 ] j .- d .
+fekete c. plaisant . 
+[ 10 ]
+y. fua , m.o .
+ward , e.a . rundensteiner .
+hierarchical parallel  coordinates exploration large datasets .
+proc .
+ieee visualization ,  pages 43–50 , oct . 1999 . 
+[ 11 ] b. hibbard d. santek .
+vis-5d system easy interactive  visualization .
+proc .
+ieee visualization , pages 28–35 , 1990 .  view publication stats  view publication stats 
